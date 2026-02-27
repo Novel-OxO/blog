@@ -12,7 +12,11 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "panda codegen && husky"
+    "prepare": "panda codegen && husky",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -31,15 +35,24 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@pandacss/dev": "^1.8.2",
+    "@playwright/test": "^1.58.2",
+    "@storybook/addon-essentials": "^8.6.17",
+    "@storybook/addon-interactions": "^8.6.17",
+    "@storybook/react": "^8.6.17",
+    "@storybook/react-vite": "^8.6.17",
+    "@storybook/test": "^8.6.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^5.1.4",
     "eslint": "^9",
     "eslint-config-next": "15.5.12",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
-    "typescript": "^5"
+    "storybook": "^8.6.17",
+    "typescript": "^5",
+    "vite": "^6.4.1"
   }
 }
