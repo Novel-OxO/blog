@@ -76,7 +76,7 @@ export function HeroSection({ article }: HeroSectionProps) {
         <Badge variant="solid">{article.category}</Badge>
         <h2 className={heroTitle}>{article.title}</h2>
         <p className={heroDescription}>{article.description}</p>
-        <Link href={`/blog/${article.slug}`} className={heroLink}>
+        <Link href={`/${article.slug}`} className={heroLink}>
           Read article <ArrowRightIcon />
         </Link>
       </div>

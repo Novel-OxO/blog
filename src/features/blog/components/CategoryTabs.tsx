@@ -51,7 +51,7 @@ export function CategoryTabs({ categories, activeCategory }: CategoryTabsProps) 
       {categories.map((category) => (
         <Link
           key={category}
-          href={category === 'All' ? '/blog' : `/blog/category/${category}`}
+          href={category === 'All' ? '/' : `/category/${category}`}
           className={tab({ active: activeCategory === category })}
         >
           {category}

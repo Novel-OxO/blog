@@ -40,7 +40,7 @@ export function Header() {
       <Container className={headerInner}>
         <div className={nav}>
           <Logo />
-          <NavLink href="/blog">Blog</NavLink>
+          <NavLink href="/">Blog</NavLink>
           <NavLink href="/about">About</NavLink>
         </div>
         <div className={actions}>

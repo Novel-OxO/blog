@@ -61,7 +61,7 @@ interface ArticleCardProps {
 
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <Link href={`/blog/${article.slug}`} className={card}>
+    <Link href={`/${article.slug}`} className={card}>
       <div className={css({ position: 'relative', h: '200px' })}>
         <Image src={article.coverImage} alt={article.title} fill className={cardImage} />
       </div>
