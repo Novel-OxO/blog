@@ -1,0 +1,6 @@
+export { FireIcon } from './FireIcon'
+export { SearchIcon } from './SearchIcon'
+export { ArrowRightIcon } from './ArrowRightIcon'
+export { TwitterIcon } from './TwitterIcon'
+export { GitHubIcon } from './GitHubIcon'
+export { DiscordIcon } from './DiscordIcon'
