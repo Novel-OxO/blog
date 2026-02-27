@@ -18,6 +18,7 @@ const featuredArticle: FeaturedArticle = {
   category: 'Product',
   date: 'Feb 20, 2026',
   coverImage: 'https://picsum.photos/seed/hero/1200/600',
+  tags: [],
 }
 
 const popularPosts: PopularPost[] = [
@@ -47,6 +48,7 @@ const articles: ArticleCardData[] = [
     category: 'Design',
     date: 'Feb 18, 2026',
     coverImage: 'https://picsum.photos/seed/ds/600/400',
+    tags: [],
   },
   {
     slug: 'nextjs-app-router',
@@ -55,6 +57,7 @@ const articles: ArticleCardData[] = [
     category: 'Engineering',
     date: 'Feb 15, 2026',
     coverImage: 'https://picsum.photos/seed/nextjs/600/400',
+    tags: [],
   },
   {
     slug: 'ai-developer-tools',
@@ -63,6 +66,7 @@ const articles: ArticleCardData[] = [
     category: 'AI',
     date: 'Feb 12, 2026',
     coverImage: 'https://picsum.photos/seed/ai/600/400',
+    tags: [],
   },
   {
     slug: 'web-performance',
@@ -71,6 +75,7 @@ const articles: ArticleCardData[] = [
     category: 'Engineering',
     date: 'Feb 10, 2026',
     coverImage: 'https://picsum.photos/seed/perf/600/400',
+    tags: [],
   },
   {
     slug: 'panda-css-deep-dive',
@@ -79,6 +84,7 @@ const articles: ArticleCardData[] = [
     category: 'Design',
     date: 'Feb 8, 2026',
     coverImage: 'https://picsum.photos/seed/panda/600/400',
+    tags: [],
   },
   {
     slug: 'edge-functions',
@@ -87,6 +93,7 @@ const articles: ArticleCardData[] = [
     category: 'Infrastructure',
     date: 'Feb 5, 2026',
     coverImage: 'https://picsum.photos/seed/edge/600/400',
+    tags: [],
   },
 ]
 

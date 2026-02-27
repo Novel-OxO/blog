@@ -1,14 +1,12 @@
 name: Claude Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to review'
+        required: true
+        type: number
 
 jobs:
   claude-review:
@@ -37,7 +35,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            Review the PR diff for ${{ github.repository }}/pull/${{ github.event.pull_request.number }}.
+            Review the PR diff for ${{ github.repository }}/pull/${{ inputs.pr_number }}.
 
             Use `gh pr diff` to read the changes, then post your review as inline comments on specific lines and a summary comment on the PR.
 
