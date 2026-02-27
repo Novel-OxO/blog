@@ -52,18 +52,41 @@ Git 관련 쓰기 작업은 반드시 `gt` 명령어를 사용하세요.
 - `gt restack` — 스택 전체 rebase
 - `gt delete` — 브랜치 삭제
 
+## Linear 이슈 연동
+
+브랜치 생성 시 반드시 Linear 이슈 번호를 포함해야 합니다.
+이렇게 하면 PR 머지 시 Linear에서 자동으로 이슈 상태가 업데이트됩니다.
+
+### 브랜치 네이밍 규칙
+- 형식: `{이슈번호}-{간단한-설명}` (gt create가 자동으로 커밋 메시지 기반으로 브랜치명 생성)
+- 커밋 메시지에 이슈 번호를 포함: `gt create -am "JUN-42 feat: add feature"`
+- 이슈 번호는 대문자로 작성 (예: `JUN-42`, `JUN-123`)
+
+### 자동 상태 변경
+- 브랜치 생성 시 커밋 메시지에 포함된 Linear 이슈를 **In Progress**로 변경한다
+- 여러 이슈 번호가 있으면 모두 변경 (예: `JUN-42 JUN-43 feat: ...`)
+- Linear MCP의 `save_issue` 도구를 사용하여 `state: "In Progress"`로 업데이트
+
+### 예시
+```bash
+# Linear 이슈 JUN-42 작업 시
+gt create -am "JUN-42 feat: add dark mode toggle"
+# → 브랜치명: jun-42-feat_add_dark_mode_toggle
+# → JUN-42 이슈를 In Progress로 변경
+```
+
 ## 주요 워크플로우
 
 ### 단일 PR
 ```bash
-gt create -am "feat: add feature"
+gt create -am "JUN-42 feat: add feature"
 gt submit
 ```
 
 ### 스택 PR
 ```bash
-gt create -am "feat(api): add endpoint"
-gt create -am "feat(ui): add page"
+gt create -am "JUN-42 feat(api): add endpoint"
+gt create -am "JUN-42 feat(ui): add page"
 gt ss
 ```
 
