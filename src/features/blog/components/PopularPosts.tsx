@@ -49,7 +49,7 @@ export function PopularPosts({ posts }: PopularPostsProps) {
   return (
     <div className={list}>
       {posts.map((post, i) => (
-        <Link key={post.slug} href={`/blog/${post.slug}`} className={item}>
+        <Link key={post.slug} href={`/${post.slug}`} className={item}>
           <span className={number}>{String(i + 1).padStart(2, '0')}</span>
           <div className={content}>
             <span className={title}>{post.title}</span>

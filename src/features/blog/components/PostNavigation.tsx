@@ -27,7 +27,7 @@ export function PostNavigation({ newer, older }: Props) {
     >
       {newer ? (
         <Link
-          href={`/blog/${newer.slug}`}
+          href={`/${newer.slug}`}
           className={css({
             display: 'flex',
             flexDirection: 'column',
@@ -59,7 +59,7 @@ export function PostNavigation({ newer, older }: Props) {
 
       {older ? (
         <Link
-          href={`/blog/${older.slug}`}
+          href={`/${older.slug}`}
           className={css({
             display: 'flex',
             flexDirection: 'column',

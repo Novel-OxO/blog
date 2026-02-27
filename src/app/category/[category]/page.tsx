@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
-import { css } from '../../../../../styled-system/css'
-import { Container } from '../../../../shared/components/layout'
-import { ArticleGrid, CategoryTabs } from '../../../../features/blog/components'
-import { getAllCategories, getPostsByCategory } from '../../../../features/blog/lib/content'
-import { toArticleCardData } from '../../../../features/blog/lib/adapters'
+import { css } from '../../../../styled-system/css'
+import { Container } from '../../../shared/components/layout'
+import { ArticleGrid, CategoryTabs } from '../../../features/blog/components'
+import { getAllCategories, getPostsByCategory } from '../../../features/blog/lib/content'
+import { toArticleCardData } from '../../../features/blog/lib/adapters'
 
 type Props = {
   params: Promise<{ category: string }>

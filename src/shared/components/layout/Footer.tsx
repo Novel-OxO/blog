@@ -32,7 +32,7 @@ export function Footer() {
       <Container className={footerInner}>
         <Logo size="sm" />
         <nav className={footerNav}>
-          <NavLink href="/blog">Blog</NavLink>
+          <NavLink href="/">Blog</NavLink>
           <NavLink href="/about">About</NavLink>
         </nav>
         <span className={copyright}>&copy; {new Date().getFullYear()} Heat Tech</span>
