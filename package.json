@@ -12,7 +12,16 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "panda codegen"
+    "prepare": "panda codegen && husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,mdx}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "next": "15.5.12",
@@ -28,6 +37,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.12",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "typescript": "^5"
   }
