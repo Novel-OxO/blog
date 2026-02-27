@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
+import { PageLayout } from '../shared/components/layout'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Personal blog',
+  title: 'Heat Tech Blog',
+  description: 'Tech articles and insights',
 }
 
 export default function RootLayout({
@@ -15,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <PageLayout>{children}</PageLayout>
+      </body>
     </html>
   )
 }

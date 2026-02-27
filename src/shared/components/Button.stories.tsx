@@ -12,14 +12,50 @@ type Story = StoryObj<typeof Button>
 
 export const Primary: Story = {
   args: {
-    label: 'Primary Button',
+    children: 'Primary Button',
     variant: 'primary',
   },
 }
 
-export const Secondary: Story = {
+export const Outline: Story = {
   args: {
-    label: 'Secondary Button',
-    variant: 'secondary',
+    children: 'Outline Button',
+    variant: 'outline',
+  },
+}
+
+export const Ghost: Story = {
+  args: {
+    children: 'Ghost Button',
+    variant: 'ghost',
+  },
+}
+
+export const Small: Story = {
+  args: {
+    children: 'Small',
+    size: 'sm',
+  },
+}
+
+export const Large: Story = {
+  args: {
+    children: 'Large Button',
+    size: 'lg',
+  },
+}
+
+export const Rounded: Story = {
+  args: {
+    children: 'Rounded Button',
+    variant: 'outline',
+    rounded: true,
+  },
+}
+
+export const FullWidth: Story = {
+  args: {
+    children: 'Full Width',
+    fullWidth: true,
   },
 }
