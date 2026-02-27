@@ -16,8 +16,8 @@ export function Button({ label, variant = 'primary', onClick }: ButtonProps) {
         borderRadius: 'md',
         fontWeight: 'semibold',
         cursor: 'pointer',
-        bg: variant === 'primary' ? 'blue.500' : 'gray.200',
-        color: variant === 'primary' ? 'white' : 'gray.800',
+        bg: variant === 'primary' ? 'heat.500' : 'neutral.100',
+        color: variant === 'primary' ? 'white' : 'neutral.900',
         _hover: {
           opacity: 0.9,
         },
