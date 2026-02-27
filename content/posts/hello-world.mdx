@@ -1,0 +1,110 @@
+---
+title: 'Hello World: Building a Modern Blog with MDX'
+description: 'A deep dive into setting up an MDX-powered blog with Next.js, featuring rich content elements and developer-friendly authoring.'
+category: 'Engineering'
+date: '2026-02-28'
+coverImage: 'https://picsum.photos/seed/hello-world/1200/600'
+---
+
+## Why MDX?
+
+MDX combines the simplicity of Markdown with the power of JSX. It lets you write content that feels natural while embedding interactive components when needed.
+
+Here's what makes MDX great for developer blogs:
+
+- **Familiar syntax** — Write in Markdown, add JSX when you need it
+- **Component reuse** — Import and use React components directly
+- **Type safety** — Full TypeScript support in your content pipeline
+- **Rich plugins** — Leverage the unified ecosystem (remark, rehype)
+
+## Getting Started
+
+Setting up an MDX pipeline involves a few key pieces. First, you need a way to parse frontmatter:
+
+```typescript
+import matter from 'gray-matter'
+import fs from 'fs'
+
+const file = fs.readFileSync('content/posts/hello-world.mdx', 'utf-8')
+const { data, content } = matter(file)
+```
+
+Then, configure your MDX compiler with the plugins you need:
+
+```typescript
+const options = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+  },
+}
+```
+
+## Content Elements
+
+### Text Formatting
+
+You can use **bold text**, _italic text_, ~~strikethrough~~, and `inline code` just like regular Markdown. Links work too — check out [Next.js documentation](https://nextjs.org/docs) for more.
+
+### Blockquotes
+
+> The best way to predict the future is to invent it.
+> — Alan Kay
+
+### Ordered Lists
+
+1. Define your content schema
+2. Create the parsing utilities
+3. Build the rendering pipeline
+4. Style your components
+5. Ship it
+
+### Code Blocks
+
+Here's a more complete example of a content utility:
+
+```typescript
+export async function getPostBySlug(slug: string): Promise<Post> {
+  const filePath = path.join(POSTS_DIR, `${slug}.mdx`)
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+
+  return {
+    slug,
+    content,
+    readTime: readingTime(content).text,
+    ...(data as PostFrontmatter),
+  }
+}
+```
+
+### Tables
+
+GFM tables are supported out of the box:
+
+| Feature        | Markdown      | MDX           |
+| -------------- | ------------- | ------------- |
+| Headings       | Yes           | Yes           |
+| Code blocks    | Yes           | Yes           |
+| JSX components | No            | Yes           |
+| Frontmatter    | Plugin needed | Plugin needed |
+| Type safety    | No            | Yes           |
+
+### Images
+
+![Placeholder image](https://picsum.photos/seed/mdx-demo/800/400)
+
+### Horizontal Rules
+
+---
+
+## What's Next
+
+This is just the beginning. Future enhancements include:
+
+1. **Syntax highlighting** with Shiki for beautiful code blocks
+2. **Category filtering** to help readers find relevant content
+3. **Table of contents** auto-generated from headings
+4. **SEO optimization** with proper meta tags
+
+Stay tuned for more updates as we build out the full blog experience.
