@@ -57,3 +57,21 @@ export function getAllPostSlugs(): string[] {
     .filter((f) => f.endsWith('.mdx'))
     .map((f) => f.replace(/\.mdx$/, ''))
 }
+
+export function getPostsByCategory(category: string): PostMeta[] {
+  return getAllPostsMeta().filter((post) => post.category === category)
+}
+
+export function getPostsByTag(tag: string): PostMeta[] {
+  return getAllPostsMeta().filter((post) => post.tags.includes(tag))
+}
+
+export function getAllCategories(): string[] {
+  const categories = getAllPostsMeta().map((post) => post.category)
+  return [...new Set(categories)].sort()
+}
+
+export function getAllTags(): string[] {
+  const tags = getAllPostsMeta().flatMap((post) => post.tags)
+  return [...new Set(tags)].sort()
+}

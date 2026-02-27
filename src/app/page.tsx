@@ -152,7 +152,7 @@ export default function Home() {
             })}
           >
             <h2 className={sectionTitle}>Latest Articles</h2>
-            <CategoryTabs categories={categories} />
+            <CategoryTabs categories={categories} activeCategory="All" />
           </div>
           <ArticleGrid articles={articles} />
           <div className={loadMoreWrapper}>

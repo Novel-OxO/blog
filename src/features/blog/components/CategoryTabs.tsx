@@ -1,8 +1,5 @@
-'use client'
-
-import { useState } from 'react'
-import { css } from '../../../../styled-system/css'
-import { cva } from '../../../../styled-system/css'
+import Link from 'next/link'
+import { css, cva } from '../../../../styled-system/css'
 
 const tabs = css({
   display: 'flex',
@@ -20,6 +17,7 @@ const tab = cva({
     cursor: 'pointer',
     transition: 'all 0.15s',
     border: '1px solid',
+    textDecoration: 'none',
   },
   variants: {
     active: {
@@ -44,22 +42,20 @@ const tab = cva({
 
 interface CategoryTabsProps {
   categories: string[]
-  defaultCategory?: string
+  activeCategory: string
 }
 
-export function CategoryTabs({ categories, defaultCategory = 'All' }: CategoryTabsProps) {
-  const [active, setActive] = useState(defaultCategory)
-
+export function CategoryTabs({ categories, activeCategory }: CategoryTabsProps) {
   return (
     <div className={tabs}>
       {categories.map((category) => (
-        <button
+        <Link
           key={category}
-          className={tab({ active: active === category })}
-          onClick={() => setActive(category)}
+          href={category === 'All' ? '/blog' : `/blog/category/${category}`}
+          className={tab({ active: activeCategory === category })}
         >
           {category}
-        </button>
+        </Link>
       ))}
     </div>
   )

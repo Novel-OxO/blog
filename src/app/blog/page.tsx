@@ -1,12 +1,13 @@
 import { css } from '../../../styled-system/css'
 import { Container } from '../../shared/components/layout'
-import { ArticleGrid } from '../../features/blog/components'
-import { getAllPostsMeta } from '../../features/blog/lib/content'
+import { ArticleGrid, CategoryTabs } from '../../features/blog/components'
+import { getAllPostsMeta, getAllCategories } from '../../features/blog/lib/content'
 import { toArticleCardData } from '../../features/blog/lib/adapters'
 
 export default function BlogPage() {
   const posts = getAllPostsMeta()
   const articles = posts.map(toArticleCardData)
+  const categories = ['All', ...getAllCategories()]
 
   return (
     <Container>
@@ -22,6 +23,9 @@ export default function BlogPage() {
         >
           Blog
         </h1>
+        <div className={css({ mb: '8' })}>
+          <CategoryTabs categories={categories} activeCategory="All" />
+        </div>
         {articles.length > 0 ? (
           <ArticleGrid articles={articles} />
         ) : (
