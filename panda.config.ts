@@ -191,13 +191,22 @@ export default defineConfig({
       },
       semanticTokens: {
         colors: {
-          surface: { value: '#ffffff' },
-          'surface.raised': { value: '#ffffff' },
-          'bg.base': { value: '#f9f9f9' },
-          'bg.lighter': { value: '#fbfbfb' },
-          'border.faint': { value: '#ededed' },
-          'border.muted': { value: '#e8e8e8' },
-          'border.loud': { value: '#e6e6e6' },
+          surface: { value: { base: '#ffffff', _dark: '{colors.neutral.950}' } },
+          'surface.raised': { value: { base: '#ffffff', _dark: '{colors.neutral.900}' } },
+          'bg.base': { value: { base: '#f9f9f9', _dark: '{colors.neutral.950}' } },
+          'bg.lighter': { value: { base: '#fbfbfb', _dark: '{colors.neutral.900}' } },
+          'text.primary': {
+            value: { base: '{colors.neutral.900}', _dark: '{colors.neutral.50}' },
+          },
+          'text.secondary': {
+            value: { base: '{colors.neutral.600}', _dark: '{colors.neutral.400}' },
+          },
+          'text.muted': {
+            value: { base: '{colors.neutral.500}', _dark: '{colors.neutral.500}' },
+          },
+          'border.faint': { value: { base: '#ededed', _dark: '{colors.neutral.800}' } },
+          'border.muted': { value: { base: '#e8e8e8', _dark: '{colors.neutral.800}' } },
+          'border.loud': { value: { base: '#e6e6e6', _dark: '{colors.neutral.700}' } },
         },
       },
     },

@@ -13,11 +13,17 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     const { mergeConfig } = await import('vite')
     return mergeConfig(config, {
+      define: {
+        'process.env': {},
+      },
       esbuild: {
         jsx: 'automatic',
         jsxImportSource: 'react',
       },
       resolve: {
+        alias: {
+          'next/image': require.resolve('./mocks/next-image.tsx'),
+        },
         dedupe: ['react', 'react-dom'],
       },
     })
