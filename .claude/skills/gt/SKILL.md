@@ -39,6 +39,7 @@ Git 관련 쓰기 작업은 반드시 `gt` 명령어를 사용하세요.
 - `gt ss` — 전체 스택 push + PR
 - `gt submit -d` — 드래프트 PR
 - `gt submit -n` — PR 메타데이터 편집 스킵
+- **PR 생성 시 항상 `--assignee @me` 옵션을 추가하여 본인을 assign할 것**
 
 ### 내비게이션
 - `gt checkout` / `gt co` — 브랜치 이동 (인터랙티브)
