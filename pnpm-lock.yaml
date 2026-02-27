@@ -11,6 +11,9 @@ importers:
       geist:
         specifier: ^1.7.0
         version: 1.7.0(next@15.5.12(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
