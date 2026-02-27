@@ -75,3 +75,15 @@ export function getAllTags(): string[] {
   const tags = getAllPostsMeta().flatMap((post) => post.tags)
   return [...new Set(tags)].sort()
 }
+
+export function getAdjacentPosts(slug: string): { newer: PostMeta | null; older: PostMeta | null } {
+  const posts = getAllPostsMeta()
+  const index = posts.findIndex((p) => p.slug === slug)
+
+  if (index === -1) return { newer: null, older: null }
+
+  return {
+    newer: index > 0 ? posts[index - 1] : null,
+    older: index < posts.length - 1 ? posts[index + 1] : null,
+  }
+}
