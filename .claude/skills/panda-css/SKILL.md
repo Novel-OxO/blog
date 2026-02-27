@@ -15,7 +15,80 @@ description: Panda CSS 스타일링 가이드. CSS, 스타일, 디자인, 레이
 - **스캔 범위**: `./src/**/*.{js,jsx,ts,tsx}`
 - **프리플라이트**: 활성화 (CSS 리셋 포함)
 - **JSX 프레임워크**: 미설정 (함수 기반 API만 사용)
-- **테마 커스텀**: 기본 프리셋만 사용 중 (아직 커스텀 토큰 없음)
+
+## 디자인 시스템 토큰
+
+전체 토큰 목록은 [references/tokens.md](references/tokens.md)를 참조하세요.
+
+### 색상 — 반드시 프로젝트 토큰 사용
+
+```tsx
+// Primary: heat (오렌지 계열, 50~950 + alpha variants)
+bg: 'heat.500'       // 기본 primary
+bg: 'heat.a8'        // 8% 투명도 (subtle 배경)
+bg: 'heat.a12'       // 12% 투명도
+
+// Neutral: neutral (회색 계열, 50~950)
+color: 'neutral.600'
+
+// Accent: accent.amethyst, accent.bluetron, accent.crimson, accent.forest, accent.honey
+```
+
+### 시맨틱 토큰 — 다크모드 자동 대응
+
+```tsx
+// 배경
+bg: 'surface'          // 기본 배경 (white / neutral.950)
+bg: 'surface.raised'   // 카드 등 올려진 배경 (white / neutral.900)
+bg: 'bg.base'          // 페이지 바탕 (f9f9f9 / neutral.950)
+bg: 'bg.lighter'       // 약간 밝은 배경 (fbfbfb / neutral.900)
+
+// 텍스트
+color: 'text.primary'    // 본문 (neutral.900 / neutral.50)
+color: 'text.secondary'  // 보조 텍스트 (neutral.600 / neutral.400)
+color: 'text.muted'      // 흐린 텍스트 (neutral.500 / neutral.500)
+
+// 보더
+borderColor: 'border.faint'  // 가장 연한 (ededed / neutral.800)
+borderColor: 'border.muted'  // 기본 (e8e8e8 / neutral.800)
+borderColor: 'border.loud'   // 강한 (e6e6e6 / neutral.700)
+```
+
+### 폰트
+
+```tsx
+fontFamily: 'heading'  // Geist Sans
+fontFamily: 'body'     // Geist Sans
+fontFamily: 'mono'     // Geist Mono
+```
+
+### 텍스트 스타일 (textStyle)
+
+```tsx
+textStyle: 'heading.1'   // 60px/64px, weight 500
+textStyle: 'heading.2'   // 52px/56px, weight 500
+textStyle: 'heading.3'   // 24px/32px, weight 500
+textStyle: 'body.base'   // 16px/24px, weight 400
+textStyle: 'body.sm'     // 14px/20px, weight 450
+textStyle: 'body.xs'     // 12px/16px, weight 400
+```
+
+### 커스텀 사이즈
+
+```tsx
+maxW: 'container'        // 1112px (메인 컨테이너)
+maxW: 'containerPadded'  // 1144px
+```
+
+### 그림자
+
+```tsx
+shadow: 'xs'       // 인셋 + 미세 그림자
+shadow: 'sm'       // 가벼운 그림자
+shadow: 'md'       // 중간 그림자
+shadow: 'lg'       // 큰 그림자
+shadow: 'primary'  // heat 컬러 글로우
+```
 
 ## 핵심 API
 
@@ -24,193 +97,96 @@ description: Panda CSS 스타일링 가이드. CSS, 스타일, 디자인, 레이
 ```tsx
 import { css } from '../../styled-system/css'
 
-// 기본 사용
-<div className={css({ bg: 'blue.500', color: 'white', p: '4', rounded: 'md' })} />
+<div className={css({ bg: 'surface.raised', color: 'text.primary', p: '4', rounded: 'lg' })} />
 
-// 반응형 (배열)
-css({ fontSize: ['sm', 'md', 'lg'] })  // mobile → sm → md 브레이크포인트
-
-// 반응형 (객체)
+// 반응형
 css({ fontSize: { base: 'sm', md: 'md', lg: 'lg' } })
 
-// 가상 선택자 / 조건부
-css({ bg: 'blue.500', _hover: { bg: 'blue.600' }, _dark: { bg: 'blue.300' } })
-
-// 합성
-css(baseStyle.raw(), { color: 'red.500' })
+// 조건부
+css({ bg: 'heat.500', _hover: { bg: 'heat.600' }, _disabled: { opacity: 0.5 } })
 ```
 
 ### cx() — 클래스명 병합
 
 ```tsx
 import { css, cx } from '../../styled-system/css'
-<div className={cx(baseClass, css({ mt: '4' }), conditionalClass)} />
+<div className={cx(baseClass, css({ mt: '4' }), className)} />
+```
+
+### cva() — 컴포넌트 레시피
+
+프로젝트에서 실제 사용하는 패턴:
+
+```tsx
+import { cva, cx, type RecipeVariantProps } from '../../styled-system/css'
+
+const button = cva({
+  base: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 'semibold',
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+    _disabled: { opacity: 0.5, cursor: 'not-allowed' },
+  },
+  variants: {
+    variant: {
+      primary: { bg: 'heat.500', color: 'white', _hover: { bg: 'heat.600' } },
+      outline: { bg: 'transparent', color: 'text.primary', borderColor: 'border.muted' },
+      ghost: { bg: 'transparent', color: 'text.secondary', _hover: { bg: 'bg.lighter' } },
+    },
+    size: {
+      sm: { px: '3', py: '1.5', fontSize: 'xs', borderRadius: 'md' },
+      md: { px: '4', py: '2', fontSize: 'sm', borderRadius: 'md' },
+      lg: { px: '6', py: '2.5', fontSize: 'md', borderRadius: 'lg' },
+    },
+  },
+  defaultVariants: { variant: 'primary', size: 'md' },
+})
+
+type ButtonVariants = RecipeVariantProps<typeof button>
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonVariants & {
+  children: React.ReactNode
+}
+
+export function Button({ variant, size, className, children, ...props }: ButtonProps) {
+  return (
+    <button className={cx(button({ variant, size }), className)} {...props}>
+      {children}
+    </button>
+  )
+}
 ```
 
 ### 패턴 함수 — 레이아웃
 
 ```tsx
-import { flex, stack, grid, container, center } from '../../styled-system/patterns'
+import { flex, stack, grid, center } from '../../styled-system/patterns'
 
-// Flex
 <div className={flex({ gap: '4', align: 'center', justify: 'between' })} />
-
-// Stack (세로)
-<div className={stack({ gap: '2', direction: 'column' })} />
-
-// HStack / VStack
-import { hstack, vstack } from '../../styled-system/patterns'
-<div className={hstack({ gap: '4' })} />
-<div className={vstack({ gap: '2' })} />
-
-// Grid
-<div className={grid({ columns: 3, gap: '4' })} />
-
-// Container (중앙 정렬 + 최대 너비)
-<div className={container()} />
-
-// Center
-<div className={center({ inline: true })} />
+<div className={grid({ columns: { base: 1, md: 2, lg: 3 }, gap: '6' })} />
 ```
 
-### cva() — 컴포넌트 레시피 (변형)
+## 컴포넌트 패턴 참고
 
-여러 variant를 가진 컴포넌트를 만들 때 사용합니다:
+기존 컴포넌트를 참고해서 일관된 스타일을 유지하세요:
 
-```tsx
-import { cva } from '../../styled-system/css'
-
-const button = cva({
-  base: { display: 'flex', alignItems: 'center', rounded: 'md', cursor: 'pointer' },
-  variants: {
-    visual: {
-      solid: { bg: 'blue.500', color: 'white' },
-      outline: { borderWidth: '1px', borderColor: 'blue.500', color: 'blue.500' },
-    },
-    size: {
-      sm: { px: '3', py: '1', fontSize: 'sm' },
-      md: { px: '4', py: '2', fontSize: 'md' },
-      lg: { px: '6', py: '3', fontSize: 'lg' },
-    },
-  },
-  defaultVariants: { visual: 'solid', size: 'md' },
-})
-
-// 사용
-<button className={button({ visual: 'outline', size: 'sm' })} />
-```
-
-### sva() — 슬롯 레시피 (다중 파트 컴포넌트)
-
-카드, 모달 등 여러 파트로 구성된 컴포넌트에 사용합니다:
-
-```tsx
-import { sva } from '../../styled-system/css'
-
-const card = sva({
-  slots: ['root', 'header', 'body', 'footer'],
-  base: {
-    root: { rounded: 'lg', shadow: 'md', overflow: 'hidden' },
-    header: { p: '4', borderBottom: '1px solid', borderColor: 'gray.200' },
-    body: { p: '4' },
-    footer: { p: '4', borderTop: '1px solid', borderColor: 'gray.200' },
-  },
-  variants: {
-    size: {
-      sm: { root: { maxW: 'sm' } },
-      lg: { root: { maxW: 'lg' } },
-    },
-  },
-})
-
-// 사용
-const classes = card({ size: 'sm' })
-<div className={classes.root}>
-  <div className={classes.header}>...</div>
-  <div className={classes.body}>...</div>
-</div>
-```
-
-## 자주 쓰는 속성 약어
-
-| 약어 | 전체 | 예시 |
-|------|------|------|
-| `p`, `px`, `py`, `pt`, `pb`, `pl`, `pr` | padding | `p: '4'` |
-| `m`, `mx`, `my`, `mt`, `mb`, `ml`, `mr` | margin | `mx: 'auto'` |
-| `bg` | background | `bg: 'blue.500'` |
-| `w`, `h` | width, height | `w: 'full'` |
-| `minW`, `maxW`, `minH`, `maxH` | min/max | `maxW: 'prose'` |
-| `rounded` | borderRadius | `rounded: 'lg'` |
-| `shadow` | boxShadow | `shadow: 'md'` |
-| `pos` | position | `pos: 'absolute'` |
-| `z` | zIndex | `z: '10'` |
-
-## 조건부 스타일
-
-```tsx
-css({
-  // 가상 선택자
-  _hover: { bg: 'blue.600' },
-  _focus: { outline: '2px solid', outlineColor: 'blue.500' },
-  _active: { transform: 'scale(0.98)' },
-  _disabled: { opacity: '0.5', cursor: 'not-allowed' },
-
-  // 다크 모드
-  _dark: { bg: 'gray.800', color: 'gray.100' },
-
-  // 미디어 쿼리
-  _motionReduce: { transition: 'none' },
-
-  // 자식 선택자
-  '& > p': { mb: '4' },
-
-  // 첫번째/마지막
-  _first: { mt: '0' },
-  _last: { mb: '0' },
-})
-```
-
-## 브레이크포인트
-
-| 이름 | 크기 |
-|------|------|
-| `sm` | 640px |
-| `md` | 768px |
-| `lg` | 1024px |
-| `xl` | 1280px |
-| `2xl` | 1536px |
-
-## 테마 커스텀 방법
-
-`panda.config.ts`에서 확장합니다:
-
-```ts
-export default defineConfig({
-  theme: {
-    extend: {
-      tokens: {
-        colors: { brand: { value: '#...' } },
-        fonts: { heading: { value: 'Inter, sans-serif' } },
-      },
-      semanticTokens: {
-        colors: {
-          text: { value: { base: '{colors.gray.900}', _dark: '{colors.gray.100}' } },
-        },
-      },
-      recipes: { button: buttonRecipe },
-    },
-  },
-})
-```
-
-토큰 변경 후 반드시 `pnpm prepare`로 코드젠을 실행하세요.
+| 컴포넌트 | 경로 | 패턴 |
+|---------|------|------|
+| Button | `src/shared/components/Button.tsx` | cva (variant, size, rounded, fullWidth) |
+| Badge | `src/shared/components/Badge.tsx` | cva (solid, subtle) |
+| Input | `src/shared/components/Input.tsx` | css (semantic tokens 사용) |
+| IconButton | `src/shared/components/IconButton.tsx` | cva (ghost, outline) |
+| Container | `src/shared/components/layout/Container.tsx` | css (maxW: 'container') |
+| Header | `src/shared/components/layout/Header.tsx` | css (sticky, z-index) |
 
 ## 유의사항
 
 - import 경로는 `../../styled-system/css` 형태 (파일 위치에 따라 상대경로 조정)
 - `jsxFramework` 미설정이므로 `<Box>`, `<Flex>` 같은 JSX 컴포넌트는 사용 불가
 - 패턴 함수(`flex()`, `grid()` 등)를 대신 사용
+- 색상은 반드시 프로젝트 토큰(heat, neutral, accent, semantic) 사용
+- 기본 프리셋 색상(blue.500, gray.200 등) 대신 프로젝트 토큰 사용
 - 설정 변경 후 `pnpm prepare` 실행 필수
 - `styled-system/`은 gitignored — 직접 수정하지 않기
-
-전체 토큰 목록은 [references/tokens.md](references/tokens.md)를 참조하세요.
