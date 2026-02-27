@@ -24,6 +24,7 @@ export const Default: Story = {
       category: 'Product',
       date: 'Feb 20, 2026',
       coverImage: 'https://picsum.photos/seed/hero/1200/600',
+      tags: [],
     },
   },
 }

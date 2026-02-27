@@ -3,10 +3,18 @@ import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
 import type { Post, PostFrontmatter, PostMeta } from '../types/content'
+import { postFrontmatterSchema } from '../types/content'
 
 const POSTS_DIR = path.join(process.cwd(), 'content/posts')
 
-// TODO AS가 아니라 ZOD로 검증 예쩡
+function parseFrontmatter(data: unknown, slug: string): PostFrontmatter {
+  const result = postFrontmatterSchema.safeParse(data)
+  if (!result.success) {
+    throw new Error(`Invalid frontmatter in "${slug}.mdx": ${result.error.message}`)
+  }
+  return result.data
+}
+
 export function getPostBySlug(slug: string): Post {
   const filePath = path.join(POSTS_DIR, `${slug}.mdx`)
   const raw = fs.readFileSync(filePath, 'utf-8')
@@ -16,7 +24,7 @@ export function getPostBySlug(slug: string): Post {
     slug,
     content,
     readTime: readingTime(content).text,
-    ...(data as PostFrontmatter),
+    ...parseFrontmatter(data, slug),
   }
 }
 
@@ -32,7 +40,7 @@ export function getAllPostsMeta(): PostMeta[] {
     return {
       slug,
       readTime: readingTime(content).text,
-      ...(data as PostFrontmatter),
+      ...parseFrontmatter(data, slug),
     }
   })
 

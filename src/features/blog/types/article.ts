@@ -5,6 +5,7 @@ export type ArticleCardData = {
   category: string
   date: string
   coverImage: string
+  tags: string[]
 }
 
 export type FeaturedArticle = ArticleCardData

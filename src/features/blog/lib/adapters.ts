@@ -18,6 +18,7 @@ export function toArticleCardData(post: PostMeta): ArticleCardData {
     category: post.category,
     date: formatDate(post.date),
     coverImage: post.coverImage,
+    tags: post.tags,
   }
 }
 

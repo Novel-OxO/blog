@@ -29,6 +29,7 @@ export const Default: Story = {
       category: 'Design',
       date: 'Feb 18, 2026',
       coverImage: 'https://picsum.photos/seed/ds/600/400',
+      tags: [],
     },
   },
 }

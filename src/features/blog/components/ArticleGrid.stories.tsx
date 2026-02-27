@@ -31,6 +31,7 @@ export const Default: Story = {
         category: 'Design',
         date: 'Feb 18, 2026',
         coverImage: 'https://picsum.photos/seed/ds/600/400',
+        tags: [],
       },
       {
         slug: 'nextjs-app-router',
@@ -39,6 +40,7 @@ export const Default: Story = {
         category: 'Engineering',
         date: 'Feb 15, 2026',
         coverImage: 'https://picsum.photos/seed/nextjs/600/400',
+        tags: [],
       },
       {
         slug: 'ai-developer-tools',
@@ -47,6 +49,7 @@ export const Default: Story = {
         category: 'AI',
         date: 'Feb 12, 2026',
         coverImage: 'https://picsum.photos/seed/ai/600/400',
+        tags: [],
       },
     ],
   },
