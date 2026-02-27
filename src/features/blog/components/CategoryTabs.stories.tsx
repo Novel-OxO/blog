@@ -13,12 +13,13 @@ type Story = StoryObj<typeof CategoryTabs>
 export const Default: Story = {
   args: {
     categories: ['All', 'Engineering', 'Design', 'AI', 'Product', 'Infrastructure'],
+    activeCategory: 'All',
   },
 }
 
-export const WithDefault: Story = {
+export const WithActive: Story = {
   args: {
     categories: ['All', 'Engineering', 'Design'],
-    defaultCategory: 'Design',
+    activeCategory: 'Design',
   },
 }

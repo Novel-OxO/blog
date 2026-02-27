@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
@@ -85,6 +86,15 @@ export default async function BlogPostPage({ params }: Props) {
           >
             {post.description}
           </p>
+          {post.tags.length > 0 && (
+            <div className={css({ display: 'flex', gap: '2', flexWrap: 'wrap', mt: '4' })}>
+              {post.tags.map((tag) => (
+                <Link key={tag} href={`/blog/tag/${tag}`}>
+                  <Badge variant="subtle">{tag}</Badge>
+                </Link>
+              ))}
+            </div>
+          )}
         </header>
 
         <MDXRemote
