@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import { css } from '../../../styled-system/css'
 import { Container } from '../../shared/components/layout'
+
+export const metadata: Metadata = {
+  title: 'About',
+  description: 'About Heat Tech Blog',
+}
 
 export default function AboutPage() {
   return (

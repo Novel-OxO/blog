@@ -1,9 +1,11 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { css } from '../../../../styled-system/css'
 import { Container } from '../../../shared/components/layout'
 import { PaginatedArticleGrid } from '../../../features/blog/components'
 import { getAllTags, getPostsByTag } from '../../../features/blog/lib/content'
 import { toArticleCardData } from '../../../features/blog/lib/adapters'
+import { siteConfig } from '../../../shared/lib/site'
 
 type Props = {
   params: Promise<{ tag: string }>
@@ -11,6 +13,16 @@ type Props = {
 
 export function generateStaticParams() {
   return getAllTags().map((tag) => ({ tag }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { tag } = await params
+  const decoded = decodeURIComponent(tag)
+  return {
+    title: `#${decoded}`,
+    description: `Posts tagged with "${decoded}" on ${siteConfig.name}`,
+    alternates: { canonical: `/tag/${tag}` },
+  }
 }
 
 export default async function TagPage({ params }: Props) {
