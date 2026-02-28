@@ -4,7 +4,7 @@ import { Container } from '../../shared/components/layout'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'About Heat Tech Blog',
+  description: 'About Novel Note',
 }
 
 export default function AboutPage() {
