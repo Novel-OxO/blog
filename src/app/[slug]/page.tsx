@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -15,6 +16,9 @@ import { getMDXComponents } from '../../features/blog/components/mdx'
 import { extractTocFromMarkdown } from '../../features/blog/lib/toc'
 import { TableOfContents } from '../../features/blog/components/TableOfContents'
 import { PostNavigation } from '../../features/blog/components/PostNavigation'
+import { siteConfig } from '../../shared/lib/site'
+import { JsonLd } from '../../shared/components/JsonLd'
+import { generateArticleJsonLd } from '../../shared/lib/jsonLd'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -22,6 +26,35 @@ type Props = {
 
 export function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  try {
+    const post = getPostBySlug(slug)
+    return {
+      title: post.title,
+      description: post.description,
+      keywords: post.tags,
+      alternates: { canonical: `/${slug}` },
+      openGraph: {
+        type: 'article',
+        title: post.title,
+        description: post.description,
+        url: `${siteConfig.url}/${slug}`,
+        publishedTime: post.date,
+        authors: [siteConfig.author.name],
+        tags: post.tags,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title,
+        description: post.description,
+      },
+    }
+  } catch {
+    return {}
+  }
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -38,130 +71,133 @@ export default async function BlogPostPage({ params }: Props) {
   const { newer, older } = getAdjacentPosts(slug)
 
   return (
-    <Container>
-      <div
-        className={css({
-          display: 'flex',
-          gap: '10',
-          justifyContent: 'center',
-          py: '10',
-        })}
-      >
-        <article
+    <>
+      <JsonLd data={generateArticleJsonLd(post)} />
+      <Container>
+        <div
           className={css({
-            maxW: '720px',
-            w: '100%',
-            minW: 0,
+            display: 'flex',
+            gap: '10',
+            justifyContent: 'center',
+            py: '10',
           })}
         >
-          <header className={css({ mb: '8' })}>
-            <div
-              className={css({
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3',
-                mb: '4',
-              })}
-            >
-              <Badge>{post.category}</Badge>
-              <span
+          <article
+            className={css({
+              maxW: '720px',
+              w: '100%',
+              minW: 0,
+            })}
+          >
+            <header className={css({ mb: '8' })}>
+              <div
                 className={css({
-                  textStyle: 'body.sm',
-                  color: 'text.muted',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3',
+                  mb: '4',
                 })}
               >
-                {formatDate(post.date)}
-              </span>
-              <span
+                <Badge>{post.category}</Badge>
+                <span
+                  className={css({
+                    textStyle: 'body.sm',
+                    color: 'text.muted',
+                  })}
+                >
+                  {formatDate(post.date)}
+                </span>
+                <span
+                  className={css({
+                    textStyle: 'body.sm',
+                    color: 'text.muted',
+                  })}
+                >
+                  {post.readTime}
+                </span>
+              </div>
+              <h1
                 className={css({
-                  textStyle: 'body.sm',
-                  color: 'text.muted',
+                  fontSize: { base: '3xl', md: '4xl' },
+                  fontWeight: 'semibold',
+                  color: 'text.primary',
+                  lineHeight: 'tight',
+                  mb: '4',
                 })}
               >
-                {post.readTime}
-              </span>
-            </div>
-            <h1
-              className={css({
-                fontSize: { base: '3xl', md: '4xl' },
-                fontWeight: 'semibold',
-                color: 'text.primary',
-                lineHeight: 'tight',
-                mb: '4',
-              })}
-            >
-              {post.title}
-            </h1>
-            <p
-              className={css({
-                textStyle: 'body.base',
-                color: 'text.secondary',
-                lineHeight: 'relaxed',
-              })}
-            >
-              {post.description}
-            </p>
-            {post.tags.length > 0 && (
-              <div className={css({ display: 'flex', gap: '2', flexWrap: 'wrap', mt: '4' })}>
-                {post.tags.map((tag) => (
-                  <Link key={tag} href={`/tag/${tag}`}>
-                    <Badge variant="subtle">{tag}</Badge>
-                  </Link>
-                ))}
+                {post.title}
+              </h1>
+              <p
+                className={css({
+                  textStyle: 'body.base',
+                  color: 'text.secondary',
+                  lineHeight: 'relaxed',
+                })}
+              >
+                {post.description}
+              </p>
+              {post.tags.length > 0 && (
+                <div className={css({ display: 'flex', gap: '2', flexWrap: 'wrap', mt: '4' })}>
+                  {post.tags.map((tag) => (
+                    <Link key={tag} href={`/tag/${tag}`}>
+                      <Badge variant="subtle">{tag}</Badge>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </header>
+
+            {post.coverImage && (
+              <div
+                className={css({
+                  position: 'relative',
+                  w: '100%',
+                  aspectRatio: '2/1',
+                  rounded: 'xl',
+                  overflow: 'hidden',
+                  mb: '8',
+                })}
+              >
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  priority
+                  className={css({ objectFit: 'cover' })}
+                />
               </div>
             )}
-          </header>
 
-          {post.coverImage && (
-            <div
-              className={css({
-                position: 'relative',
-                w: '100%',
-                aspectRatio: '2/1',
-                rounded: 'xl',
-                overflow: 'hidden',
-                mb: '8',
-              })}
-            >
-              <Image
-                src={post.coverImage}
-                alt={post.title}
-                fill
-                priority
-                className={css({ objectFit: 'cover' })}
-              />
-            </div>
-          )}
+            <TableOfContents items={tocItems} variant="mobile" />
 
-          <TableOfContents items={tocItems} variant="mobile" />
-
-          <MDXRemote
-            source={post.content}
-            options={{
-              mdxOptions: {
-                remarkPlugins: [remarkGfm],
-                rehypePlugins: [
-                  [
-                    rehypePrettyCode,
-                    {
-                      theme: { light: 'github-light', dark: 'github-dark' },
-                      keepBackground: false,
-                    },
+            <MDXRemote
+              source={post.content}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [
+                    [
+                      rehypePrettyCode,
+                      {
+                        theme: { light: 'github-light', dark: 'github-dark' },
+                        keepBackground: false,
+                      },
+                    ],
+                    rehypeSlug,
+                    rehypeAutolinkHeadings,
                   ],
-                  rehypeSlug,
-                  rehypeAutolinkHeadings,
-                ],
-              },
-            }}
-            components={getMDXComponents()}
-          />
+                },
+              }}
+              components={getMDXComponents()}
+            />
 
-          <PostNavigation newer={newer} older={older} />
-        </article>
+            <PostNavigation newer={newer} older={older} />
+          </article>
 
-        {/* Desktop TOC sidebar */}
-        <TableOfContents items={tocItems} variant="desktop" />
-      </div>
-    </Container>
+          {/* Desktop TOC sidebar */}
+          <TableOfContents items={tocItems} variant="desktop" />
+        </div>
+      </Container>
+    </>
   )
 }

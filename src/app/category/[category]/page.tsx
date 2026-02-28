@@ -1,9 +1,11 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { css } from '../../../../styled-system/css'
 import { Container } from '../../../shared/components/layout'
 import { PaginatedArticleGrid, CategoryTabs } from '../../../features/blog/components'
 import { getAllCategories, getPostsByCategory } from '../../../features/blog/lib/content'
 import { toArticleCardData } from '../../../features/blog/lib/adapters'
+import { siteConfig } from '../../../shared/lib/site'
 
 type Props = {
   params: Promise<{ category: string }>
@@ -11,6 +13,16 @@ type Props = {
 
 export function generateStaticParams() {
   return getAllCategories().map((category) => ({ category }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { category } = await params
+  const decoded = decodeURIComponent(category)
+  return {
+    title: `${decoded} Posts`,
+    description: `${decoded} category articles on ${siteConfig.name}`,
+    alternates: { canonical: `/category/${category}` },
+  }
 }
 
 export default async function CategoryPage({ params }: Props) {
