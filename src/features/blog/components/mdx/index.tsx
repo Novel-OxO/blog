@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types'
 import { css } from '../../../../../styled-system/css'
+import { CodeBlock } from './code-block'
 
 export function getMDXComponents(): MDXComponents {
   return {
@@ -131,21 +132,23 @@ export function getMDXComponents(): MDXComponents {
         </code>
       )
     },
+    figure: ({ children, ...props }) => {
+      // rehype-pretty-code wraps code blocks in figure with this attribute
+      if ('data-rehype-pretty-code-figure' in props) {
+        return <CodeBlock>{children}</CodeBlock>
+      }
+      return <figure {...props}>{children}</figure>
+    },
     pre: (props) => (
       <pre
         className={css({
           fontFamily: 'mono',
           fontSize: 'sm',
           lineHeight: 'normal',
-          bg: 'bg.lighter',
           color: 'var(--shiki-light)',
-          _dark: { color: 'var(--shiki-dark)', bg: 'neutral.900' },
+          _dark: { color: 'var(--shiki-dark)' },
           p: '5',
-          rounded: 'lg',
-          mb: '5',
           overflowX: 'auto',
-          borderWidth: '1px',
-          borderColor: 'border.faint',
           '& code': {
             bg: 'transparent',
             p: '0',
