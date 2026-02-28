@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { css } from '../../../../styled-system/css'
 import { Container } from '../../../shared/components/layout'
-import { ArticleGrid, CategoryTabs } from '../../../features/blog/components'
+import { PaginatedArticleGrid, CategoryTabs } from '../../../features/blog/components'
 import { getAllCategories, getPostsByCategory } from '../../../features/blog/lib/content'
 import { toArticleCardData } from '../../../features/blog/lib/adapters'
 
@@ -40,7 +40,7 @@ export default async function CategoryPage({ params }: Props) {
         <div className={css({ mb: '8' })}>
           <CategoryTabs categories={categories} activeCategory={decoded} />
         </div>
-        <ArticleGrid articles={articles} />
+        <PaginatedArticleGrid articles={articles} />
       </div>
     </Container>
   )

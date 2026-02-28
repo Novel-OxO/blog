@@ -1,6 +1,6 @@
 import { css } from '../../styled-system/css'
 import { Container } from '../shared/components/layout'
-import { ArticleGrid, CategoryTabs } from '../features/blog/components'
+import { PaginatedArticleGrid, CategoryTabs } from '../features/blog/components'
 import { getAllPostsMeta, getAllCategories } from '../features/blog/lib/content'
 import { toArticleCardData } from '../features/blog/lib/adapters'
 
@@ -27,7 +27,7 @@ export default function BlogPage() {
           <CategoryTabs categories={categories} activeCategory="All" />
         </div>
         {articles.length > 0 ? (
-          <ArticleGrid articles={articles} />
+          <PaginatedArticleGrid articles={articles} />
         ) : (
           <p className={css({ color: 'text.muted', textStyle: 'body.base' })}>No posts yet.</p>
         )}

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { css } from '../../../../styled-system/css'
 import { Container } from '../../../shared/components/layout'
-import { ArticleGrid } from '../../../features/blog/components'
+import { PaginatedArticleGrid } from '../../../features/blog/components'
 import { getAllTags, getPostsByTag } from '../../../features/blog/lib/content'
 import { toArticleCardData } from '../../../features/blog/lib/adapters'
 
@@ -45,7 +45,7 @@ export default async function TagPage({ params }: Props) {
         >
           {articles.length} {articles.length === 1 ? 'post' : 'posts'}
         </p>
-        <ArticleGrid articles={articles} />
+        <PaginatedArticleGrid articles={articles} />
       </div>
     </Container>
   )
