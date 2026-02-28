@@ -1,9 +1,7 @@
 import { css } from '../../../../styled-system/css'
 import { Logo } from '../Logo'
-import { NavLink } from '../NavLink'
-import { IconButton } from '../IconButton'
-import { Button } from '../Button'
-import { SearchIcon } from '../icons'
+import { SearchDialog } from '../SearchDialog'
+import { getAllPostsMeta } from '../../../features/blog/lib/content'
 import { Container } from './Container'
 
 const header = css({
@@ -22,33 +20,21 @@ const headerInner = css({
   h: '16',
 })
 
-const nav = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6',
-})
-
-const actions = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '2',
-})
-
 export function Header() {
+  const posts = getAllPostsMeta()
+  const searchItems = posts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    description: p.description,
+    category: p.category,
+    tags: p.tags,
+  }))
+
   return (
     <header className={header}>
       <Container className={headerInner}>
-        <div className={nav}>
-          <Logo />
-          <NavLink href="/">Blog</NavLink>
-          <NavLink href="/about">About</NavLink>
-        </div>
-        <div className={actions}>
-          <IconButton aria-label="Search">
-            <SearchIcon />
-          </IconButton>
-          <Button size="sm">Subscribe</Button>
-        </div>
+        <Logo />
+        <SearchDialog items={searchItems} />
       </Container>
     </header>
   )

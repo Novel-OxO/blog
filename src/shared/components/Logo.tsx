@@ -22,7 +22,7 @@ export function Logo({ size = 'md' }: LogoProps) {
   return (
     <Link href="/" className={cx(logoBase, size === 'sm' ? logoSm : logoMd)}>
       <FireIcon className={css({ color: 'heat.500', fontSize: size === 'sm' ? 'md' : 'xl' })} />
-      HEAT TECH
+      Novel Note
     </Link>
   )
 }

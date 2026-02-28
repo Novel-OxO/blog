@@ -1,8 +1,8 @@
 export const siteConfig = {
-  name: 'Heat Tech Blog',
+  name: 'Novel Note',
   description: 'Tech articles and insights',
-  url: 'https://heat.tech',
+  url: 'https://novel-note.dev',
   locale: 'ko_KR',
-  author: { name: 'Heat Tech', url: 'https://heat.tech/about' },
-  social: { twitter: '@heattech' },
+  author: { name: 'Novel', url: 'https://novel-note.dev/about' },
+  social: { twitter: '@novel_dev' },
 }

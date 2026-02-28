@@ -1,6 +1,4 @@
 import { css } from '../../../../styled-system/css'
-import { Logo } from '../Logo'
-import { NavLink } from '../NavLink'
 import { Container } from './Container'
 
 const footer = css({
@@ -12,13 +10,7 @@ const footer = css({
 const footerInner = css({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-})
-
-const footerNav = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6',
+  justifyContent: 'center',
 })
 
 const copyright = css({
@@ -30,12 +22,7 @@ export function Footer() {
   return (
     <footer className={footer}>
       <Container className={footerInner}>
-        <Logo size="sm" />
-        <nav className={footerNav}>
-          <NavLink href="/">Blog</NavLink>
-          <NavLink href="/about">About</NavLink>
-        </nav>
-        <span className={copyright}>&copy; {new Date().getFullYear()} Heat Tech</span>
+        <span className={copyright}>&copy; {new Date().getFullYear()} Novel Note</span>
       </Container>
     </footer>
   )
