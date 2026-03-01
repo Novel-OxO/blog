@@ -10,13 +10,13 @@ const POSTS_DIR = path.join(process.cwd(), 'content/posts')
 function parseFrontmatter(data: unknown, slug: string): PostFrontmatter {
   const result = postFrontmatterSchema.safeParse(data)
   if (!result.success) {
-    throw new Error(`Invalid frontmatter in "${slug}.mdx": ${result.error.message}`)
+    throw new Error(`Invalid frontmatter in "${slug}": ${result.error.message}`)
   }
   return result.data
 }
 
 export function getPostBySlug(slug: string): Post {
-  const filePath = path.join(POSTS_DIR, `${slug}.mdx`)
+  const filePath = path.join(POSTS_DIR, slug, 'index.mdx')
   const raw = fs.readFileSync(filePath, 'utf-8')
   const { data, content } = matter(raw)
 
@@ -29,11 +29,11 @@ export function getPostBySlug(slug: string): Post {
 }
 
 export function getAllPostsMeta(): PostMeta[] {
-  const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith('.mdx'))
+  const dirs = fs.readdirSync(POSTS_DIR, { withFileTypes: true }).filter((d) => d.isDirectory())
 
-  const posts = files.map((file) => {
-    const slug = file.replace(/\.mdx$/, '')
-    const filePath = path.join(POSTS_DIR, file)
+  const posts = dirs.map((dir) => {
+    const slug = dir.name
+    const filePath = path.join(POSTS_DIR, slug, 'index.mdx')
     const raw = fs.readFileSync(filePath, 'utf-8')
     const { data, content } = matter(raw)
 
@@ -53,9 +53,9 @@ export function getAllPostsMeta(): PostMeta[] {
 
 export function getAllPostSlugs(): string[] {
   return fs
-    .readdirSync(POSTS_DIR)
-    .filter((f) => f.endsWith('.mdx'))
-    .map((f) => f.replace(/\.mdx$/, ''))
+    .readdirSync(POSTS_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
 }
 
 export function getPostsByCategory(category: string): PostMeta[] {

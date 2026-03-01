@@ -116,12 +116,12 @@ export function CodeBlock({ children }: { children: ReactNode }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'text.muted',
+              color: copied ? 'heat.500' : 'text.muted',
               cursor: 'pointer',
               rounded: 'sm',
               p: '1',
               transition: 'colors',
-              _hover: { color: 'text.primary' },
+              _hover: { color: copied ? 'heat.500' : 'text.primary' },
             })}
           >
             {copied ? <CheckIcon /> : <CopyIcon />}
@@ -147,11 +147,11 @@ export function CodeBlock({ children }: { children: ReactNode }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'text.muted',
+              color: copied ? 'heat.500' : 'text.muted',
               cursor: 'pointer',
               rounded: 'sm',
               p: '1',
-              opacity: 0,
+              opacity: copied ? 1 : 0,
               transition: 'opacity',
               zIndex: 1,
             })}

@@ -1,6 +1,8 @@
+import { isValidElement, type ReactNode } from 'react'
 import type { MDXComponents } from 'mdx/types'
 import { css } from '../../../../../styled-system/css'
 import { CodeBlock } from './code-block'
+import { Mermaid } from './mermaid'
 
 export function getMDXComponents(): MDXComponents {
   return {
@@ -135,6 +137,11 @@ export function getMDXComponents(): MDXComponents {
     figure: ({ children, ...props }) => {
       // rehype-pretty-code wraps code blocks in figure with this attribute
       if ('data-rehype-pretty-code-figure' in props) {
+        const lang = extractLanguage(children)
+        if (lang === 'mermaid') {
+          const chart = extractMermaidText(children)
+          if (chart) return <Mermaid chart={chart} />
+        }
         return <CodeBlock>{children}</CodeBlock>
       }
       return <figure {...props}>{children}</figure>
@@ -236,4 +243,27 @@ export function getMDXComponents(): MDXComponents {
       <strong className={css({ fontWeight: 'bold', color: 'text.primary' })} {...props} />
     ),
   }
+}
+
+function extractLanguage(children: ReactNode): string {
+  const arr = Array.isArray(children) ? children : [children]
+  for (const child of arr) {
+    if (!isValidElement<Record<string, unknown>>(child)) continue
+    if (child.type === 'pre' || child.props['data-theme'] != null) {
+      const code = child.props.children
+      if (isValidElement<Record<string, unknown>>(code)) {
+        return (code.props['data-language'] as string) ?? ''
+      }
+    }
+  }
+  return ''
+}
+
+function extractMermaidText(node: ReactNode): string {
+  if (typeof node === 'string') return node
+  if (typeof node === 'number') return String(node)
+  if (!node) return ''
+  if (Array.isArray(node)) return node.map(extractMermaidText).join('')
+  if (isValidElement<{ children?: ReactNode }>(node)) return extractMermaidText(node.props.children)
+  return ''
 }
