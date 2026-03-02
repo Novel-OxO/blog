@@ -1,0 +1,562 @@
+---
+title: 'CSS 핵심 정리'
+description: 'CSS의 기본 개념부터 선택자, 명시도, 텍스트 스타일링, 색상과 배경, 단위까지 핵심 내용을 정리한다.'
+category: 'Engineering'
+date: '2026-03-02'
+coverImage: '/posts/css/cover.png'
+tags: ['CSS', 'Web']
+---
+
+> 이 글은 주니어 개발자가 학습하며 정리한 내용입니다. 잘못된 정보가 있을 수 있으니, 발견하시면 편하게 알려주세요.
+
+## CSS란
+
+CSS는 **Cascading Style Sheets**의 약자로, HTML 문서의 시각적 표현(레이아웃, 색상, 폰트 등)을 정의하는 스타일 언어다. HTML이 문서의 **구조와 콘텐츠**를 담당한다면, CSS는 **디자인과 레이아웃**을 담당한다.
+
+## Cascading이란
+
+"캐스케이딩"은 여러 스타일 규칙이 하나의 요소에 적용될 때, **어떤 스타일이 최종적으로 적용되는지 결정하는 우선순위 규칙**이다. 스타일이 폭포(cascade)처럼 위에서 아래로 흐르며 덮어쓰는 구조라고 이해하면 된다.
+
+다음 순서로 우선순위가 결정된다:
+
+1. **Origin**(출처): 사용자 에이전트(브라우저 기본) → 사용자 → 작성자(개발자) 스타일 순으로 우선순위가 증가한다.
+2. **Specificity**(명시도): 선택자가 구체적일수록 우선순위가 높다.
+3. **Order**(선언 순서): 같은 우선순위라면 나중에 선언된 스타일이 적용된다.
+
+## CSS의 기본 구조
+
+CSS는 **선택자**(Selector)와 **선언 블록**(Declaration Block)으로 구성된다.
+
+- **선택자**: 스타일을 적용할 HTML 요소를 지정하는 부분
+- **선언 블록**: 선택자 뒤에 오는 `{ }` 중괄호 안의 영역. 하나 이상의 선언으로 구성되며, 각 선언은 **속성**(Property)과 **값**(Value) 쌍으로 이루어진다.
+
+```css
+선택자 {
+  속성: 값;
+  속성: 값;
+}
+```
+
+```css
+/* 예시 */
+h1 {
+  color: red;
+  font-size: 24px;
+}
+```
+
+- `h1` → 선택자
+- `{ ... }` → 선언 블록
+- `color: red;` → 선언 (속성: `color`, 값: `red`)
+
+## CSS 적용 방법
+
+CSS를 HTML에 적용하는 방법은 세 가지가 있다.
+
+### 인라인 스타일
+
+HTML 요소의 `style` 속성에 직접 작성한다. 우선순위가 높지만 재사용성이 낮아 권장하지 않는다.
+
+```html
+<p style="color: red; font-size: 16px;">텍스트</p>
+```
+
+### 내부 스타일시트
+
+HTML 문서의 `<head>` 안에 `<style>` 태그로 작성한다. 해당 HTML 문서에서만 적용된다.
+
+```html
+<head>
+  <style>
+    p {
+      color: blue;
+      font-size: 16px;
+    }
+  </style>
+</head>
+```
+
+### 외부 스타일시트
+
+별도의 `.css` 파일을 만들고 `<link>` 태그로 연결한다. **가장 권장되는 방법**으로, 유지보수와 재사용, 캐싱에 유리하다.
+
+```html
+<head>
+  <link rel="stylesheet" href="style.css" />
+</head>
+```
+
+```css
+/* style.css */
+p {
+  color: green;
+  font-size: 16px;
+}
+```
+
+## CSS 선택자 종류
+
+### 요소 선택자
+
+HTML 태그 이름으로 선택한다. 해당 태그를 사용하는 모든 요소에 적용된다.
+
+```css
+p {
+  color: black;
+}
+
+h1 {
+  font-size: 32px;
+}
+```
+
+### 클래스 선택자
+
+`.`(점) + 클래스명으로 선택한다. 여러 요소에 동일한 클래스를 부여하여 재사용할 수 있고, 하나의 요소에 여러 클래스를 적용할 수도 있다.
+
+```css
+.highlight {
+  background-color: yellow;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+```
+
+```html
+<p class="highlight text-bold">여러 클래스 적용</p>
+```
+
+### ID 선택자
+
+`#` + ID명으로 선택한다. 페이지 내에서 고유한 하나의 요소에만 사용하며, 클래스보다 명시도가 높다.
+
+```css
+#header {
+  background-color: navy;
+  color: white;
+}
+```
+
+```html
+<div id="header">헤더 영역</div>
+```
+
+### 속성 선택자
+
+`[]` 안에 속성명 또는 속성값 조건으로 선택한다.
+
+```css
+/* href 속성이 있는 모든 a 태그 */
+a[href] {
+  color: blue;
+}
+
+/* type이 text인 input */
+input[type='text'] {
+  border: 1px solid gray;
+}
+
+/* href가 https로 시작하는 a 태그 */
+a[href^='https'] {
+  color: green;
+}
+
+/* href가 .pdf로 끝나는 a 태그 */
+a[href$='.pdf'] {
+  color: red;
+}
+```
+
+### 가상 클래스
+
+`:` + 가상 클래스명으로 요소의 **특정 상태**를 선택한다.
+
+```css
+/* 마우스를 올렸을 때 */
+a:hover {
+  color: red;
+}
+
+/* 첫 번째 자식 요소 */
+li:first-child {
+  font-weight: bold;
+}
+
+/* 마지막 자식 요소 */
+li:last-child {
+  border-bottom: none;
+}
+
+/* n번째 자식 요소 */
+li:nth-child(2) {
+  color: blue;
+}
+
+/* 포커스 상태 */
+input:focus {
+  outline: 2px solid blue;
+}
+```
+
+### 가상 요소
+
+`::` + 가상 요소명으로 요소의 **특정 부분**을 선택한다. 가상 클래스와 달리 요소의 상태가 아닌 콘텐츠의 일부를 대상으로 한다.
+
+```css
+/* 요소의 앞에 콘텐츠 삽입 */
+h1::before {
+  content: '★ ';
+}
+
+/* 요소의 뒤에 콘텐츠 삽입 */
+h1::after {
+  content: ' ★';
+}
+
+/* 첫 번째 줄 */
+p::first-line {
+  font-weight: bold;
+}
+
+/* 첫 번째 글자 */
+p::first-letter {
+  font-size: 2em;
+  color: red;
+}
+
+/* 사용자가 드래그한 텍스트 */
+p::selection {
+  background-color: yellow;
+}
+```
+
+### 자손 선택자
+
+공백으로 구분하여 하위 모든 자손 요소를 선택한다. 깊이에 상관없이 포함된 모든 요소에 적용된다.
+
+```css
+/* div 안의 모든 p (자식, 손자 등 전부) */
+div p {
+  color: blue;
+}
+```
+
+### 자식 선택자
+
+`>`로 구분하여 바로 아래 자식 요소만 선택한다. 손자 이하 요소에는 적용되지 않는다.
+
+```css
+/* div의 직접 자식인 p만 */
+div > p {
+  color: red;
+}
+```
+
+### 형제 선택자
+
+`~`로 구분하여 같은 부모를 공유하는 뒤에 오는 모든 형제 요소를 선택한다.
+
+```css
+/* h1 뒤에 오는 모든 형제 p */
+h1 ~ p {
+  color: gray;
+}
+```
+
+### 인접 형제 선택자
+
+`+`로 구분하여 바로 다음에 오는 형제 요소 하나만 선택한다.
+
+```css
+/* h1 바로 다음에 오는 p 하나만 */
+h1 + p {
+  font-size: 18px;
+}
+```
+
+### 전체 선택자
+
+`*`로 모든 요소를 선택한다. 주로 초기화(reset) 스타일에 사용한다.
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+```
+
+### :root 선택자
+
+문서의 최상위 루트 요소를 선택한다. HTML에서는 `<html>`에 해당하며, `html` 선택자보다 명시도가 높다. 주로 CSS 변수를 정의할 때 사용한다.
+
+```css
+:root {
+  --primary-color: #3498db;
+  --font-size-base: 16px;
+}
+
+p {
+  color: var(--primary-color);
+  font-size: var(--font-size-base);
+}
+```
+
+### html / body 선택자
+
+`html` 선택자는 `<html>` 요소를 직접 선택하며, 폰트 크기 기준(`rem`) 설정 등에 사용한다. `body` 선택자는 페이지 전체에 적용할 기본 스타일을 지정할 때 사용한다.
+
+```css
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Pretendard', sans-serif;
+  background-color: #fff;
+  color: #333;
+  line-height: 1.6;
+}
+```
+
+## Specificity (명시도)
+
+동일한 요소에 여러 CSS 규칙이 적용될 때, 어떤 규칙이 우선 적용되는지 결정하는 **가중치 시스템**이다. 명시도가 높은 선택자의 스타일이 우선 적용되고, 명시도가 같으면 나중에 선언된 스타일이 적용된다.
+
+### 계산식
+
+명시도는 4자리 가중치 **A, B, C, D**로 계산된다.
+
+| 등급  | 대상                        | 예시                       |
+| ----- | --------------------------- | -------------------------- |
+| **A** | 인라인 스타일               | `style="..."`              |
+| **B** | ID 선택자                   | `#header`                  |
+| **C** | 클래스 / 속성 / 가상 클래스 | `.nav`, `[type]`, `:hover` |
+| **D** | 요소 / 가상 요소            | `div`, `p`, `::before`     |
+
+### 계산 예시
+
+| 선택자                           | A   | B   | C   | D   | 명시도  |
+| -------------------------------- | --- | --- | --- | --- | ------- |
+| `p`                              | 0   | 0   | 0   | 1   | 0,0,0,1 |
+| `.intro`                         | 0   | 0   | 1   | 0   | 0,0,1,0 |
+| `#header`                        | 0   | 1   | 0   | 0   | 0,1,0,0 |
+| `style="..."`                    | 1   | 0   | 0   | 0   | 1,0,0,0 |
+| `div p`                          | 0   | 0   | 0   | 2   | 0,0,0,2 |
+| `div.intro p`                    | 0   | 0   | 1   | 2   | 0,0,1,2 |
+| `#header .nav li`                | 0   | 1   | 1   | 1   | 0,1,1,1 |
+| `#header .nav li.active a:hover` | 0   | 1   | 3   | 2   | 0,1,3,2 |
+
+왼쪽(A)부터 순서대로 비교하며, 먼저 큰 쪽이 승리한다. 예를 들어 `0,1,0,0`은 `0,0,99,99`보다 우선한다. ID 하나가 클래스 99개보다 강하다.
+
+### !important
+
+선언 뒤에 `!important`를 붙이면 명시도와 관계없이 **최우선 적용**된다. `!important` 끼리 충돌하면 그 안에서 다시 명시도 규칙을 따른다.
+
+```css
+p {
+  color: red !important; /* 다른 어떤 규칙보다 우선 */
+}
+
+#header p {
+  color: blue; /* 명시도가 높지만 !important에 밀림 */
+}
+```
+
+남용하면 스타일 우선순위 흐름을 깨뜨려 디버깅이 어려워지고, `!important`를 덮기 위해 또 `!important`를 써야 하는 악순환이 발생한다. 외부 라이브러리 스타일을 불가피하게 덮어써야 하거나, 유틸리티 클래스 등 제한적 용도에서만 사용하는 것이 좋다.
+
+## 텍스트 스타일링
+
+### 글꼴
+
+```css
+p {
+  font-family: 'Pretendard', Arial, sans-serif; /* 글꼴 (fallback 순서) */
+  font-size: 16px; /* 글자 크기 */
+  font-weight: bold; /* 굵기 (100~900, normal, bold) */
+  font-style: italic; /* 스타일 (normal, italic, oblique) */
+  line-height: 1.6; /* 줄 높이 */
+  letter-spacing: 0.5px; /* 자간 */
+  word-spacing: 2px; /* 단어 간격 */
+}
+```
+
+### 정렬
+
+```css
+p {
+  text-align: left; /* 왼쪽 정렬 (기본값) */
+  text-align: center; /* 가운데 정렬 */
+  text-align: right; /* 오른쪽 정렬 */
+  text-align: justify; /* 양쪽 정렬 */
+}
+```
+
+### 변형
+
+```css
+p {
+  text-transform: uppercase; /* 모두 대문자 */
+  text-transform: lowercase; /* 모두 소문자 */
+  text-transform: capitalize; /* 단어 첫 글자만 대문자 */
+  text-transform: none; /* 변형 없음 (기본값) */
+}
+```
+
+### 장식
+
+```css
+a {
+  text-decoration: none; /* 장식 제거 (링크 밑줄 제거 등) */
+  text-decoration: underline; /* 밑줄 */
+  text-decoration: overline; /* 윗줄 */
+  text-decoration: line-through; /* 취소선 */
+}
+
+/* 세부 속성으로 분리 가능 */
+p {
+  text-decoration-line: underline; /* 선 종류 */
+  text-decoration-color: red; /* 선 색상 */
+  text-decoration-style: wavy; /* 선 스타일 (solid, double, dotted, dashed, wavy) */
+  text-decoration-thickness: 2px; /* 선 두께 */
+}
+```
+
+## 색상과 배경
+
+### 색상 표현 방식
+
+```css
+p {
+  color: red; /* 키워드 */
+  color: #ff0000; /* HEX (16진수) */
+  color: #f00; /* HEX 축약형 */
+  color: rgb(255, 0, 0); /* RGB */
+  color: rgba(255, 0, 0, 0.5); /* RGBA (a = 투명도 0~1) */
+  color: hsl(0, 100%, 50%); /* HSL (색상, 채도, 명도) */
+  color: hsla(0, 100%, 50%, 0.5); /* HSLA */
+}
+```
+
+### 텍스트 색상
+
+```css
+p {
+  color: #333; /* 글자 색상 */
+  opacity: 0.8; /* 요소 전체 투명도 (0~1) */
+}
+```
+
+### 배경 색상
+
+```css
+div {
+  background-color: #f5f5f5;
+  background-color: rgba(0, 0, 0, 0.1); /* 반투명 배경 */
+}
+```
+
+### 배경 이미지
+
+```css
+div {
+  background-image: url('bg.jpg');
+  background-repeat: no-repeat; /* 반복 (repeat, repeat-x, repeat-y, no-repeat) */
+  background-size: cover; /* 크기 (cover, contain, px, %) */
+  background-position: center; /* 위치 (top, center, bottom, left, right, px, %) */
+  background-attachment: fixed; /* 스크롤 (scroll, fixed, local) */
+}
+
+/* 단축 속성 */
+div {
+  background: #f5f5f5 url('bg.jpg') no-repeat center / cover;
+}
+```
+
+### 그라디언트
+
+```css
+div {
+  /* 선형 그라디언트 */
+  background: linear-gradient(to right, #ff0000, #0000ff);
+  background: linear-gradient(45deg, #ff0000, #ff9900, #0000ff);
+
+  /* 원형 그라디언트 */
+  background: radial-gradient(circle, #ff0000, #0000ff);
+}
+```
+
+## CSS 단위
+
+### px
+
+**절대 단위**로, 화면의 고정된 크기를 나타낸다. 어디서든 동일한 크기를 유지하며, 정밀한 제어가 필요할 때 사용한다. 반응형에는 불리하다.
+
+```css
+p {
+  font-size: 16px;
+  border: 1px solid black;
+}
+```
+
+### em
+
+**상대 단위**로, **부모 요소**의 `font-size`를 기준으로 계산된다. 중첩될수록 기준이 바뀌어 복합 계산이 발생할 수 있다.
+
+```css
+/* 부모의 font-size가 16px일 때 */
+.parent {
+  font-size: 16px;
+}
+
+.child {
+  font-size: 1.5em; /* 16px × 1.5 = 24px */
+  padding: 2em; /* 24px × 2 = 48px (자신의 font-size 기준) */
+}
+```
+
+### rem
+
+**상대 단위**로, **루트 요소** `<html>`의 `font-size`를 기준으로 계산된다. 중첩에 영향받지 않아 `em`보다 예측 가능하고 일관적이다. 반응형 디자인에 가장 많이 사용되는 단위다.
+
+```css
+html {
+  font-size: 16px; /* 기준 */
+}
+
+p {
+  font-size: 1rem; /* 16px */
+  margin: 1.5rem; /* 24px */
+}
+
+h1 {
+  font-size: 2rem; /* 32px — 중첩과 무관하게 항상 동일 */
+}
+```
+
+### %
+
+**상대 단위**로, **부모 요소의 해당 속성값**을 기준으로 계산된다. 속성에 따라 기준이 다르다.
+
+```css
+.parent {
+  width: 800px;
+}
+
+.child {
+  width: 50%; /* 800px × 0.5 = 400px */
+  font-size: 120%; /* 부모 font-size의 120% */
+}
+```
+
+### 단위 비교 요약
+
+| 단위  | 종류 | 기준             | 특징                     |
+| ----- | ---- | ---------------- | ------------------------ |
+| `px`  | 절대 | 고정             | 정밀하지만 반응형에 불리 |
+| `em`  | 상대 | 부모 요소        | 중첩 시 복합 계산 발생   |
+| `rem` | 상대 | 루트(`html`)     | 일관적, 반응형에 적합    |
+| `%`   | 상대 | 부모의 해당 속성 | 레이아웃에 유용          |
