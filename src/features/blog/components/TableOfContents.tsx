@@ -97,6 +97,8 @@ export function TableOfContents({ items, variant }: Props) {
           top: '24',
           maxH: 'calc(100vh - token(spacing.32))',
           overflowY: 'auto',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
           w: '220px',
           flexShrink: 0,
         })}
