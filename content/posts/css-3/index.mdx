@@ -413,35 +413,43 @@ flowchart TB
 }
 ```
 
-## Stacking Context (쌓임 맥락)
+## Stacking Context
 
-**쌓임 맥락**은 z-index가 적용되는 **독립적인 레이어 그룹**이다. 같은 쌓임 맥락 안에서만 z-index 비교가 의미 있으며, 서로 다른 쌓임 맥락에 속한 요소끼리는 **부모의 z-index로 승패가 결정**된다.
+**Stacking Context**는 z-index가 적용되는 **독립적인 레이어 그룹**이다. 같은 Stacking Context 안에서만 z-index 비교가 의미 있으며, 서로 다른 Stacking Context에 속한 요소끼리는 **부모의 z-index로 승패가 결정**된다.
 
 ```mermaid
 flowchart TB
-  subgraph ctxA["쌓임 맥락 A (z-index: 1)"]
+  subgraph ctxA["Stacking Context A<br/>z-index: 1"]
+    A0[" "]
     A1["자식 z-index: 999"]
     A2["자식 z-index: 500"]
+    A3[" "]
   end
 
-  subgraph ctxB["쌓임 맥락 B (z-index: 2)"]
+  subgraph ctxB["Stacking Context B<br/>z-index: 2"]
+    B0[" "]
     B1["자식 z-index: 1"]
     B2["자식 z-index: 0"]
+    B3[" "]
   end
 
-  result["결과: B가 A보다 위에 표시<br/>A의 자식이 999여도 B의 자식(1)보다 아래!"]
+  result["결과: B가 A보다 위에 표시<br/>A의 자식이 999여도 B의 자식보다 아래!"]
   ctxA --> result
   ctxB --> result
 
   style ctxA fill:#ffcdd2,stroke:#e53935
   style ctxB fill:#c8e6c9,stroke:#43a047
   style result fill:#fff9c4,stroke:#f9a825
+  style A0 fill:none,stroke:none
+  style A3 fill:none,stroke:none
+  style B0 fill:none,stroke:none
+  style B3 fill:none,stroke:none
 ```
 
 ```css
 .parent-a {
   position: relative;
-  z-index: 1; /* 쌓임 맥락 생성 */
+  z-index: 1; /* Stacking Context 생성 */
 }
 
 .parent-a .child {
@@ -457,7 +465,7 @@ flowchart TB
 /* 결과: parent-b가 parent-a의 child(9999) 위에 표시됨 */
 ```
 
-### 쌓임 맥락이 생성되는 조건
+### Stacking Context이 생성되는 조건
 
 - 루트 요소 (`<html>`)
 - `position: absolute` 또는 `relative`이면서 `z-index`가 `auto`가 아닌 경우
@@ -469,7 +477,7 @@ flowchart TB
 - Flexbox/Grid 자식이면서 `z-index`가 `auto`가 아닌 경우
 
 ```css
-/* 명시적으로 쌓임 맥락을 생성하고 싶을 때 */
+/* 명시적으로 Stacking Context을 생성하고 싶을 때 */
 .new-context {
   isolation: isolate; /* 가장 깔끔한 방법 — 다른 부작용 없음 */
 }
@@ -477,7 +485,7 @@ flowchart TB
 
 ### z-index 관리 전략
 
-무분별하게 큰 값을 사용하면 z-index 전쟁이 발생한다. CSS 변수로 체계적으로 관리하는 것이 좋다.
+무분별하게 큰 값을 사용하면 z-index 관리가 까다롭다. CSS 변수로 체계적으로 관리하는 것이 좋다.
 
 ```css
 /* 나쁜 예 */
