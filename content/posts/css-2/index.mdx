@@ -1,0 +1,711 @@
+---
+title: 'CSS 핵심 정리 2편'
+description: 'Display 속성, Box Model, Overflow, Opacity, Line-Height까지 CSS 레이아웃과 시각적 속성의 핵심을 정리한다.'
+category: 'Engineering'
+date: '2026-03-02'
+coverImage: '/posts/css-2/cover.png'
+tags: ['CSS', 'Web']
+---
+
+> 이 글은 주니어 개발자가 학습하며 정리한 내용입니다. 잘못된 정보가 있을 수 있으니, 발견하시면 편하게 알려주세요.
+
+## Display 속성
+
+`display` 속성은 요소가 문서 흐름에서 **어떻게 배치되고 공간을 차지하는지** 결정하는 핵심 속성이다. 모든 HTML 요소는 기본적으로 **블록(block)** 또는 **인라인(inline)** 중 하나의 display 값을 가지며, `display` 속성을 변경하면 요소의 기본 배치 방식을 자유롭게 바꿀 수 있다.
+
+### block
+
+블록 요소는 **항상 새로운 줄에서 시작**하며, **가로 너비를 부모 요소의 100%만큼 차지**한다. `width`, `height`, `margin`, `padding`을 모두 자유롭게 설정할 수 있고, 블록 요소 안에 인라인 요소나 다른 블록 요소를 포함할 수 있다.
+
+```css
+div {
+  display: block; /* 기본값 */
+  width: 300px;
+  height: 200px;
+  margin: 20px;
+  padding: 10px;
+}
+```
+
+대표적인 블록 요소는 다음과 같다.
+
+| 태그                   | 용도           |
+| ---------------------- | -------------- |
+| `<div>`                | 범용 컨테이너  |
+| `<p>`                  | 문단           |
+| `<h1>` ~ `<h6>`        | 제목           |
+| `<ul>`, `<ol>`, `<li>` | 목록           |
+| `<section>`            | 구획           |
+| `<article>`            | 독립 콘텐츠    |
+| `<header>`, `<footer>` | 머리글, 바닥글 |
+| `<form>`               | 입력 양식      |
+
+```html
+<!-- 블록 요소는 한 줄을 전부 차지 -->
+<div style="background: lightblue;">첫 번째 블록</div>
+<div style="background: lightcoral;">두 번째 블록</div>
+<!-- 결과: 세로로 쌓임 -->
+```
+
+### inline
+
+인라인 요소는 **줄바꿈 없이** 콘텐츠 흐름 안에서 나란히 배치되며, **콘텐츠 크기만큼만** 너비를 차지한다.
+
+주의할 점은 다음과 같다:
+
+- `width`, `height` 설정이 **무시**된다.
+- `margin`은 **좌우만 적용**되고, 상하 margin은 무시된다.
+- `padding`은 상하좌우 모두 적용되지만, **상하 padding은 주변 요소의 레이아웃에 영향을 주지 않는다.** (시각적으로 보이기는 함)
+
+```css
+span {
+  display: inline; /* 기본값 */
+  width: 200px; /* 무시됨 */
+  height: 100px; /* 무시됨 */
+  margin-top: 20px; /* 무시됨 */
+  margin-left: 10px; /* 적용됨 */
+  padding: 5px; /* 시각적으로 보이지만 상하는 레이아웃에 영향 없음 */
+}
+```
+
+대표적인 인라인 요소는 다음과 같다.
+
+| 태그              | 용도                         |
+| ----------------- | ---------------------------- |
+| `<span>`          | 범용 인라인 컨테이너         |
+| `<a>`             | 링크                         |
+| `<strong>`, `<b>` | 강조 (굵게)                  |
+| `<em>`, `<i>`     | 강조 (기울임)                |
+| `<img>`           | 이미지 (replaced element)    |
+| `<input>`         | 입력 필드 (replaced element) |
+| `<code>`          | 코드                         |
+
+```html
+<!-- 인라인 요소는 나란히 배치됨 -->
+<span style="background: lightblue;">인라인 1</span>
+<span style="background: lightcoral;">인라인 2</span>
+<span style="background: lightgreen;">인라인 3</span>
+<!-- 결과: 가로로 나란히 -->
+```
+
+> **Replaced Element (대체 요소)**
+>
+> `<img>`, `<input>`, `<video>` 등은 인라인 요소이지만 replaced element로 분류되어 `width`, `height` 설정이 가능하다. 브라우저가 외부 콘텐츠로 대체하는 요소이기 때문에 일반 인라인 요소와 다르게 동작한다.
+
+### inline-block
+
+인라인처럼 **한 줄에 나란히 배치**되면서, 블록처럼 `width`, `height`, `margin`, `padding`을 **모두 설정할 수 있다.** 인라인과 블록의 장점을 결합한 방식이다.
+
+```css
+.badge {
+  display: inline-block;
+  width: 100px; /* 적용됨 */
+  height: 40px; /* 적용됨 */
+  margin: 10px; /* 상하좌우 모두 적용 */
+  padding: 5px 10px; /* 상하좌우 모두 적용 */
+  text-align: center;
+  background-color: #3498db;
+  color: white;
+}
+```
+
+```html
+<span class="badge">뱃지 1</span>
+<span class="badge">뱃지 2</span>
+<span class="badge">뱃지 3</span>
+<!-- 결과: 가로로 나란히 배치되면서 크기 조절 가능 -->
+```
+
+### block vs inline vs inline-block 비교
+
+| 특성           | `block`        | `inline`            | `inline-block`   |
+| -------------- | -------------- | ------------------- | ---------------- |
+| 줄바꿈         | 새 줄에서 시작 | 같은 줄에 나란히    | 같은 줄에 나란히 |
+| 기본 너비      | 부모의 100%    | 콘텐츠 크기만큼     | 콘텐츠 크기만큼  |
+| width / height | 설정 가능      | 무시됨              | 설정 가능        |
+| margin 상하    | 적용           | 무시됨              | 적용             |
+| margin 좌우    | 적용           | 적용                | 적용             |
+| padding        | 적용           | 시각적으로만 (상하) | 적용             |
+
+### none
+
+요소를 **화면에서 완전히 제거**한다. 공간도 차지하지 않으며, DOM에는 존재하지만 렌더링되지 않는다.
+
+```css
+.hidden {
+  display: none;
+}
+```
+
+### display: none vs visibility: hidden
+
+| 속성                 | 화면        | 공간            | 이벤트    |
+| -------------------- | ----------- | --------------- | --------- |
+| `display: none`      | 보이지 않음 | 공간 차지 안 함 | 클릭 불가 |
+| `visibility: hidden` | 보이지 않음 | 공간 유지       | 클릭 불가 |
+| `opacity: 0`         | 보이지 않음 | 공간 유지       | 클릭 가능 |
+
+```css
+/* 완전히 제거 — 레이아웃에 영향 */
+.remove {
+  display: none;
+}
+
+/* 숨기기 — 레이아웃 유지 */
+.invisible {
+  visibility: hidden;
+}
+
+/* 투명하게 — 레이아웃 유지 + 이벤트 수신 */
+.transparent {
+  opacity: 0;
+}
+```
+
+## Box Model
+
+모든 HTML 요소는 **사각형 박스**로 렌더링되며, 이 박스의 구조를 **박스 모델(Box Model)**이라 한다. 박스 모델은 안쪽부터 바깥쪽으로 4개의 영역으로 구성된다.
+
+1. **Content** — 실제 콘텐츠(텍스트, 이미지 등)가 표시되는 영역
+2. **Padding** — 콘텐츠와 테두리 사이의 안쪽 여백
+3. **Border** — 패딩 바깥의 테두리
+4. **Margin** — 테두리 바깥의 바깥쪽 여백 (다른 요소와의 간격)
+
+### Content
+
+텍스트, 이미지 등 실제 내용이 표시되는 영역이다. `width`와 `height`로 크기를 지정한다.
+
+```css
+div {
+  width: 300px; /* 콘텐츠 영역의 너비 */
+  height: 200px; /* 콘텐츠 영역의 높이 */
+}
+```
+
+### Padding
+
+콘텐츠와 테두리 사이의 **안쪽 공간**이다. `background-color`가 패딩 영역까지 적용되며, 음수 값은 사용할 수 없다.
+
+```css
+div {
+  padding: 20px; /* 상하좌우 모두 20px */
+  padding: 10px 20px; /* 상하 10px, 좌우 20px */
+  padding: 10px 20px 30px; /* 상 10px, 좌우 20px, 하 30px */
+  padding: 10px 20px 30px 40px; /* 상, 우, 하, 좌 (시계방향) */
+}
+
+/* 개별 속성 */
+div {
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 30px;
+  padding-left: 40px;
+}
+```
+
+### Border
+
+패딩 바깥을 감싸는 **테두리 선**이다. `border-width`, `border-style`, `border-color` 세 가지 속성으로 구성된다.
+
+```css
+div {
+  /* 단축 속성: 두께 스타일 색상 */
+  border: 2px solid #333;
+}
+
+/* 개별 속성 */
+div {
+  border-width: 2px;
+  border-style: solid; /* none, solid, dashed, dotted, double, groove, ridge, inset, outset */
+  border-color: #333;
+}
+
+/* 방향별 설정 */
+div {
+  border-top: 3px solid red;
+  border-right: 1px dashed blue;
+  border-bottom: 2px dotted green;
+  border-left: none;
+}
+```
+
+`border-radius`로 모서리를 둥글게 만들 수 있다.
+
+```css
+div {
+  border-radius: 10px; /* 모든 모서리 동일 */
+  border-radius: 10px 20px; /* 좌상+우하, 우상+좌하 */
+  border-radius: 10px 20px 30px 40px; /* 좌상, 우상, 우하, 좌하 (시계방향) */
+  border-radius: 50%; /* 원형 (정사각형일 때) */
+}
+```
+
+### Margin
+
+테두리 바깥의 **다른 요소와의 간격**이다. 배경색이 적용되지 않으며, **음수 값을 사용하여** 요소를 겹치게 배치할 수도 있다. `auto` 값으로 수평 가운데 정렬이 가능하다.
+
+```css
+div {
+  margin: 20px; /* 상하좌우 모두 20px */
+  margin: 10px 20px; /* 상하 10px, 좌우 20px */
+  margin: 10px 20px 30px; /* 상 10px, 좌우 20px, 하 30px */
+  margin: 10px 20px 30px 40px; /* 상, 우, 하, 좌 (시계방향) */
+}
+
+/* 수평 가운데 정렬 */
+div {
+  width: 600px;
+  margin: 0 auto; /* 상하 0, 좌우 auto → 가운데 정렬 */
+}
+```
+
+### Margin Collapsing
+
+**인접한 블록 요소의 상하 margin이 겹칠 때**, 두 margin이 합산되지 않고 **큰 쪽 하나만 적용**되는 현상이다. 좌우 margin에서는 발생하지 않는다.
+
+```css
+.box-a {
+  margin-bottom: 30px;
+}
+
+.box-b {
+  margin-top: 20px;
+}
+
+/* 예상: 간격 50px (30 + 20) */
+/* 실제: 간격 30px (큰 쪽만 적용) */
+```
+
+마진 상쇄가 발생하는 경우는 세 가지다
+
+1. **인접 형제 요소** — 위 요소의 `margin-bottom`과 아래 요소의 `margin-top`이 겹침
+2. **부모-자식 요소** — 부모에 `border`, `padding`, `overflow` 등이 없으면 자식의 margin이 부모 바깥으로 빠져나감
+3. **빈 블록 요소** — 콘텐츠가 없는 요소의 `margin-top`과 `margin-bottom`이 서로 겹침
+
+부모-자식 마진 상쇄는 다음과 같은 방법으로 해결할 수 있다.
+
+```css
+/* 1. 부모에 padding 추가 */
+.parent {
+  padding-top: 1px;
+}
+
+/* 2. 부모에 border 추가 */
+.parent {
+  border-top: 1px solid transparent;
+}
+
+/* 3. 부모에 overflow 설정 */
+.parent {
+  overflow: hidden;
+}
+
+/* 4. 부모를 BFC로 만들기 */
+.parent {
+  display: flow-root;
+}
+```
+
+### box-sizing
+
+요소의 `width`, `height`가 **어느 영역까지 포함하는지** 결정하는 속성이다. "width를 300px로 설정했는데 실제로는 더 크다"는 문제의 원인이 바로 이 속성이다.
+
+#### content-box (기본값)
+
+`width`, `height`가 **콘텐츠 영역만** 지정한다. padding과 border가 추가로 더해져 실제 렌더링 크기가 커진다.
+
+```css
+div {
+  box-sizing: content-box; /* 기본값 */
+  width: 300px;
+  padding: 20px;
+  border: 5px solid black;
+}
+/* 실제 너비 = 300 + (20 × 2) + (5 × 2) = 350px */
+```
+
+#### border-box
+
+`width`, `height`가 **content + padding + border를 모두 포함**한다. 지정한 크기가 곧 요소의 최종 크기이므로 직관적이고 계산이 쉽다.
+
+```css
+div {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 20px;
+  border: 5px solid black;
+}
+/* 실제 너비 = 300px (padding, border 포함) */
+/* 콘텐츠 영역 = 300 - (20 × 2) - (5 × 2) = 250px */
+```
+
+#### 왜 border-box를 쓰는가
+
+`content-box`에서는 `%` 레이아웃에서 문제가 발생한다.
+
+```css
+/* content-box일 때 — 50% + 50%인데 한 줄에 안 들어감 */
+.left {
+  box-sizing: content-box;
+  width: 50%;
+  padding: 20px; /* 실제 너비 = 50% + 40px → 초과! */
+}
+
+.right {
+  box-sizing: content-box;
+  width: 50%;
+  padding: 20px; /* 실제 너비 = 50% + 40px → 초과! */
+}
+/* 두 요소의 합 = 100% + 80px → 부모를 넘쳐서 줄바꿈 발생 */
+
+/* border-box일 때 — 깔끔하게 한 줄에 배치 */
+.left {
+  box-sizing: border-box;
+  width: 50%;
+  padding: 20px; /* 실제 너비 = 정확히 50% */
+}
+
+.right {
+  box-sizing: border-box;
+  width: 50%;
+  padding: 20px; /* 실제 너비 = 정확히 50% */
+}
+/* 두 요소의 합 = 정확히 100% → 완벽하게 한 줄 */
+```
+
+#### 전역 설정 (권장)
+
+거의 모든 CSS 리셋에 포함되는 필수 설정이다. 프로젝트 시작 시 가장 먼저 선언하는 것이 일반적이다.
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+```
+
+#### content-box vs border-box 비교
+
+| 속성       | `content-box`                    | `border-box`                         |
+| ---------- | -------------------------------- | ------------------------------------ |
+| width 기준 | 콘텐츠 영역만                    | content + padding + border           |
+| 실제 크기  | width + padding + border         | width 그대로                         |
+| 계산       | padding/border 추가 시 크기 변동 | 지정 크기 유지, 콘텐츠 영역이 줄어듦 |
+| % 레이아웃 | padding 때문에 넘침 발생         | 정확한 비율 유지                     |
+| 실무 사용  | 거의 사용 안 함                  | **거의 항상 사용** (권장)            |
+
+## Overflow
+
+자식 콘텐츠가 부모 요소의 크기를 **넘칠 때 어떻게 처리할지** 결정하는 속성이다. `width`나 `height`가 고정된 요소에서 콘텐츠가 영역을 초과할 때 동작한다.
+
+### overflow 값 종류
+
+#### visible (기본값)
+
+넘친 콘텐츠가 요소 밖으로 **그대로 표시**된다. 잘리지 않고 부모 경계를 넘어서 보인다.
+
+```css
+.box {
+  width: 200px;
+  height: 100px;
+  overflow: visible; /* 기본값 */
+}
+```
+
+#### hidden
+
+넘친 콘텐츠를 **잘라서 숨긴다.** 스크롤바 없이 완전히 잘리며, 사용자가 넘친 부분에 접근할 수 없다.
+
+```css
+.box {
+  width: 200px;
+  height: 100px;
+  overflow: hidden;
+}
+```
+
+#### scroll
+
+**항상 스크롤바를 표시**한다. 콘텐츠가 넘치지 않아도 스크롤바가 보인다.
+
+```css
+.box {
+  width: 200px;
+  height: 100px;
+  overflow: scroll;
+}
+```
+
+#### auto
+
+콘텐츠가 넘칠 때**만** 스크롤바를 표시한다. 넘치지 않으면 스크롤바가 나타나지 않아 **가장 실용적**이다.
+
+```css
+.box {
+  width: 200px;
+  height: 100px;
+  overflow: auto;
+}
+```
+
+### overflow 값 비교
+
+| 값        | 넘친 콘텐츠 | 스크롤바  | 사용 상황                      |
+| --------- | ----------- | --------- | ------------------------------ |
+| `visible` | 그대로 표시 | 없음      | 기본값, 넘침을 허용할 때       |
+| `hidden`  | 잘라서 숨김 | 없음      | 넘친 부분을 완전히 숨길 때     |
+| `scroll`  | 스크롤 가능 | 항상 표시 | 항상 스크롤 영역임을 표시할 때 |
+| `auto`    | 스크롤 가능 | 넘칠 때만 | **가장 많이 사용**             |
+
+### overflow-x, overflow-y
+
+가로와 세로 방향의 넘침을 각각 다르게 처리할 수 있다.
+
+```css
+.box {
+  overflow-x: hidden; /* 가로 넘침은 숨김 */
+  overflow-y: auto; /* 세로 넘침은 스크롤 */
+}
+
+/* 단축 속성 */
+.box {
+  overflow: hidden auto; /* x: hidden, y: auto */
+}
+```
+
+### overflow: hidden의 활용
+
+`overflow: hidden`은 넘침 처리 외에도 다양한 용도로 사용된다.
+
+```css
+/* 1. float 해제 (clearfix 대안) */
+.parent {
+  overflow: hidden; /* 자식의 float를 포함하여 높이를 잡아줌 */
+}
+
+/* 2. 마진 상쇄 방지 — BFC 생성 */
+.parent {
+  overflow: hidden; /* 부모-자식 마진 상쇄를 방지 */
+}
+
+/* 3. 텍스트 말줄임과 함께 사용 */
+.text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* ... 표시 */
+}
+
+/* 4. 둥근 모서리에서 자식 콘텐츠 잘림 처리 */
+.card {
+  border-radius: 16px;
+  overflow: hidden; /* 자식이 둥근 모서리를 넘지 않도록 */
+}
+```
+
+### text-overflow
+
+`overflow: hidden`과 함께 사용하여 넘친 텍스트를 어떻게 표시할지 결정한다.
+
+```css
+/* 한 줄 말줄임 */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* ... 표시 */
+}
+
+/* 여러 줄 말줄임 (2줄까지 표시) */
+.multi-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+```
+
+## Opacity
+
+요소의 **전체 투명도**를 조절하는 속성이다. `0`(완전 투명)부터 `1`(완전 불투명) 사이의 값을 가진다. 핵심 특징은 **요소 자체뿐 아니라 모든 자식 요소까지 함께 투명해진다**는 것이다.
+
+```css
+.box {
+  opacity: 1; /* 완전 불투명 (기본값) */
+  opacity: 0.5; /* 50% 투명 */
+  opacity: 0; /* 완전 투명 (보이지 않지만 공간은 차지) */
+}
+```
+
+### opacity의 특징
+
+- 요소는 투명해져도 **공간을 그대로 차지**한다. (`display: none`과 다름)
+- 투명해져도 **클릭 등 이벤트를 수신**한다. (`visibility: hidden`과 다름)
+- 부모에 opacity를 적용하면 자식 요소도 함께 투명해지며, **자식에서 되돌릴 수 없다.**
+
+```css
+.parent {
+  opacity: 0.5;
+}
+
+.parent .child {
+  opacity: 1; /* 효과 없음 — 부모가 0.5이므로 자식도 최대 0.5 */
+}
+```
+
+### opacity vs rgba 배경
+
+배경만 투명하게 하고 텍스트는 유지하고 싶다면 `opacity` 대신 `rgba`를 사용한다.
+
+```css
+/* opacity — 텍스트까지 전부 투명해짐 */
+.box-opacity {
+  background-color: black;
+  color: white;
+  opacity: 0.5; /* 배경 + 텍스트 모두 50% 투명 */
+}
+
+/* rgba — 배경만 투명, 텍스트는 선명하게 유지 */
+.box-rgba {
+  background-color: rgba(0, 0, 0, 0.5); /* 배경만 50% 투명 */
+  color: white; /* 텍스트는 불투명 */
+}
+```
+
+### 요소 숨기기 방법 비교
+
+| 속성                 | 보임 | 공간 | 이벤트 | 접근성    | transition |
+| -------------------- | ---- | ---- | ------ | --------- | ---------- |
+| `display: none`      | X    | 제거 | X      | 읽지 않음 | 불가       |
+| `visibility: hidden` | X    | 유지 | X      | 읽지 않음 | 가능       |
+| `opacity: 0`         | X    | 유지 | 수신   | 읽음      | 가능       |
+
+### opacity와 transition
+
+opacity는 transition/animation과 궁합이 좋아 부드러운 페이드 인/아웃 효과에 자주 사용된다.
+
+```css
+/* 페이드 인/아웃 */
+.fade {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fade:hover {
+  opacity: 1;
+}
+
+/* 버튼 호버 효과 */
+.btn:hover {
+  opacity: 0.8;
+}
+
+/* 비활성화 표현 */
+.disabled {
+  opacity: 0.4;
+  pointer-events: none; /* 클릭도 막으려면 함께 사용 */
+}
+```
+
+### opacity와 Stacking Context
+
+`opacity`가 `1`이 아닌 값을 가지면 **새로운 쌓임 맥락(Stacking Context)**이 생성된다. 이로 인해 `z-index` 동작이 예상과 달라질 수 있다.
+
+```css
+.parent {
+  opacity: 0.99; /* 거의 불투명하지만 stacking context가 생김 */
+}
+
+.parent .child {
+  position: relative;
+  z-index: 9999; /* 부모의 stacking context 안에 갇혀서 */
+} /* 부모 바깥 요소보다 위로 올라가지 못할 수 있음 */
+```
+
+## Line-Height
+
+텍스트 한 줄이 차지하는 **전체 높이**를 지정하는 속성이다. 글자 크기(`font-size`)에 위아래 여백(half-leading)이 더해져 line-height가 구성된다. 줄 간격, 텍스트 수직 정렬, 가독성에 직접적인 영향을 미친다.
+
+### 값 지정 방법
+
+```css
+p {
+  font-size: 16px;
+
+  line-height: normal; /* 브라우저 기본값 (보통 1.2 정도) */
+  line-height: 24px; /* 절대값 — 고정 24px */
+  line-height: 1.5; /* 숫자 (단위 없음) — font-size × 1.5 = 24px */
+  line-height: 150%; /* 퍼센트 — font-size × 150% = 24px */
+  line-height: 1.5em; /* em — font-size × 1.5 = 24px */
+}
+```
+
+### 단위 없는 숫자 vs em/% 차이
+
+**단위 없는 숫자가 권장**되는 이유는 자식 요소에서의 상속 동작이 다르기 때문이다.
+
+```css
+/* em/% — 부모에서 "계산된 값"이 상속됨 */
+.parent {
+  font-size: 20px;
+  line-height: 1.5em; /* 20 × 1.5 = 30px로 계산됨 */
+}
+
+.parent .child {
+  font-size: 12px;
+  /* line-height: 30px이 그대로 상속됨 */
+  /* 12px 글자에 30px 줄 높이 → 줄 간격이 너무 넓음 */
+}
+
+/* 단위 없는 숫자 — "비율 자체"가 상속됨 */
+.parent {
+  font-size: 20px;
+  line-height: 1.5; /* 비율 1.5가 상속됨 */
+}
+
+.parent .child {
+  font-size: 12px;
+  /* line-height: 1.5가 상속 → 12 × 1.5 = 18px */
+  /* 글자 크기에 비례하여 적절한 줄 높이 유지 */
+}
+```
+
+| 지정 방식    | 상속되는 값   | 자식에서의 동작                         |
+| ------------ | ------------- | --------------------------------------- |
+| `1.5` (숫자) | 비율 `1.5`    | 자식의 font-size × 1.5 → **적절**       |
+| `1.5em`      | 계산된 `30px` | 고정 30px 그대로 → **부적절할 수 있음** |
+| `150%`       | 계산된 `30px` | 고정 30px 그대로 → **부적절할 수 있음** |
+
+### 텍스트 수직 가운데 정렬
+
+`line-height`를 요소의 `height`와 동일하게 설정하면 한 줄 텍스트를 수직 가운데 정렬할 수 있다. 단, 한 줄 텍스트에서만 유효한 방법이다.
+
+```css
+.button {
+  height: 40px;
+  line-height: 40px; /* height와 동일 → 수직 가운데 */
+}
+
+/* 여러 줄에서는 사용하면 안 됨 — 줄 간격이 비정상적으로 넓어짐 */
+```
+
+### 권장 line-height 값
+
+| 용도               | 권장 값        | 이유                               |
+| ------------------ | -------------- | ---------------------------------- |
+| 본문 텍스트        | `1.5` ~ `1.8`  | 가독성이 좋은 줄 간격              |
+| 제목 (h1~h3)       | `1.2` ~ `1.4`  | 제목은 간격이 좁을수록 응집력 있음 |
+| 버튼/UI 요소       | `1` ~ `1.2`    | 컴팩트한 UI에 적합                 |
+| 접근성 기준 (WCAG) | **최소 `1.5`** | 난독증 등을 고려한 권장 기준       |
+
+```css
+body {
+  font-size: 16px;
+  line-height: 1.6; /* 본문 — 가독성 좋은 줄 간격 */
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.3; /* 제목 — 조금 더 좁게 */
+}
+```
